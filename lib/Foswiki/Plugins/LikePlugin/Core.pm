@@ -455,6 +455,10 @@ sub solrIndexTopicHandler {
   my $sth = $this->getStatementHandler("select_likes");
   my ($like, $dislike, $totalLike) = $this->{dbh}->selectrow_array($sth, undef, $web, $topic, "", "");
 
+  $like ||= 0;
+  $dislike ||= 0;
+  $totalLike ||= 0;
+
   #print STDERR "like=$like, dislike=$dislike, totalLike=$totalLike\n";
 
   $doc->add_fields(
@@ -472,7 +476,12 @@ sub dbcacheIndexTopicHandler {
   my $sth = $this->getStatementHandler("select_likes");
   my ($like, $dislike, $totalLike) = $this->{dbh}->selectrow_array($sth, undef, $web, $topic, "", "");
 
+  $like ||= 0;
+  $dislike ||= 0;
+  $totalLike ||= 0;
+
   #print STDERR "like=$like, dislike=$dislike, totalLike=$totalLike\n";
+
   $obj->set("likes", $like);
   $obj->set("dislikes", $dislike);
   $obj->set("totallikes", $totalLike);
