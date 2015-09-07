@@ -213,12 +213,12 @@ sub LIKE {
   $dislikeFormat =~ s/%num%/%dislikeCount%/g;
 
   my $likeLabel = $params->{likelabel} // '%MAKETEXT{"I like this"}%';
-  my $likedLabel = $params->{likedlabel} // '%MAKETEXT{"I like\'d this"}%';
+  my $likedLabel = $params->{likedlabel} // $likeLabel;
   my $thisLikeLabel = $myLike > 0?$likedLabel:$likeLabel;
   $thisLikeLabel = $thisLikeLabel?"<span class='jqLikeLabel'>$thisLikeLabel</span>":"";
 
-  my $dislikeLabel = $params->{dislikelabel} // '%MAKETEXT{"I don\'t like this"}%';
-  my $dislikedLabel = $params->{dislikelabel} // '%MAKETEXT{"I didn\'t like this"}%';
+  my $dislikeLabel = $params->{dislikelabel} // '%MAKETEXT{"I don&#39;t like this"}%';
+  my $dislikedLabel = $params->{dislikelabel} // $dislikeLabel;
   my $thisDislikeLabel = $myDislike > 0?$dislikedLabel:$dislikeLabel;
   $thisDislikeLabel = $thisDislikeLabel?"<span class='jqLikeLabel'>$thisDislikeLabel</span>":"";
 

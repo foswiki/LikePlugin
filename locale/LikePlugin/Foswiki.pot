@@ -16,18 +16,10 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: lib/Foswiki/Plugins/LikePlugin/Core.pm:221
-msgid "I didn\\'t like this"
-msgstr ""
-
 #: lib/Foswiki/Plugins/LikePlugin/Core.pm:220
-msgid "I don\\'t like this"
+msgid "I don&#39;t like this"
 msgstr ""
 
 #: lib/Foswiki/Plugins/LikePlugin/Core.pm:215
 msgid "I like this"
-msgstr ""
-
-#: lib/Foswiki/Plugins/LikePlugin/Core.pm:216
-msgid "I like\\'d this"
 msgstr ""
