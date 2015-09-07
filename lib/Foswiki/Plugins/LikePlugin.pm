@@ -36,6 +36,20 @@ sub initPlugin {
     return core()->jsonRpcVote(@_);
   });
 
+  if ($Foswiki::cfg{Plugins}{SolrPlugin}{Enabled}) {
+    require Foswiki::Plugins::SolrPlugin;
+    Foswiki::Plugins::SolrPlugin::registerIndexTopicHandler(sub {
+      return core()->solrIndexTopicHandler(@_);
+    });
+  }
+
+  if ($Foswiki::cfg{Plugins}{DBCachePlugin}{Enabled}) {
+    require Foswiki::Plugins::DBCachePlugin;
+    Foswiki::Plugins::DBCachePlugin::registerIndexTopicHandler(sub {
+      return core()->dbcacheIndexTopicHandler(@_);
+    });
+  }
+
   return 1;
 }
 

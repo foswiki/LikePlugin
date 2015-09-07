@@ -40,30 +40,13 @@ HERE
         username = ?
 HERE
 
-  'select_total_likes' => <<'HERE',
-      select sum(like)-sum(dislike) from %likesTable% where
-        web = ? and 
-        topic = ? and 
-        meta_type = ? and
-        meta_id = ? 
-HERE
-
   'select_likes' => <<'HERE',
-      select sum(like), sum(dislike) from %likesTable% where
+      select sum(like), sum(dislike), sum(like)-sum(dislike) from %likesTable% where
         web = ? and 
         topic = ? and 
         meta_type = ? and
         meta_id = ? 
 HERE
-);
-
-our %THEMES = (
-  default => "jqLikeDefault",
-  lightgray => "jqLikeDefault jqLikeLightGray",
-  gray => "jqLikeDefault jqLikeGray",
-  black => "jqLikeDefault jqLikeBlack",
-  simple => "jqLikeSimple",
-  pattern => "jqLikePattern"
 );
 
 ###############################################################################
@@ -81,7 +64,44 @@ sub new {
     dsn => $Foswiki::cfg{LikePlugin}{Database}{DSN} || 'dbi:SQLite:dbname=' . Foswiki::Func::getWorkArea('LikePlugin') . '/likes.db',
     username => $Foswiki::cfg{LikePlugin}{Database}{UserName},
     password => $Foswiki::cfg{LikePlugin}{Database}{Password},
-    tablePrefix => $Foswiki::cfg{LikePlugin}{Database}{TablePrefix} || 'foswiki_likesplugin_',
+    tablePrefix => $Foswiki::cfg{LikePlugin}{Database}{TablePrefix} || 'foswiki_',
+    themes => $Foswiki::cfg{LikePlugin}{Themes} || {
+      default => {
+        wrapperClass => "jqLikeDefault",
+        selectionClass => "selected",
+      },
+      padding => {
+        wrapperClass => "jqLikeDefault jqLikePadding",
+        selectionClass => "selected",
+      },
+      lightgray => {
+        wrapperClass => "jqLikeDefault jqLikeLightGray",
+        selectionClass => "selected",
+      },
+      gray => {
+        wrapperClass => "jqLikeDefault jqLikeGray",
+        selectionClass => "selected",
+      },
+      black => {
+        wrapperClass => "jqLikeDefault jqLikeBlack",
+        selectionClass => "selected",
+      },
+      simple => {
+        wrapperClass => "jqLikeSimple",
+        selectionClass => "selected",
+      },
+      pattern => {
+        wrapperClass => "jqLikePattern",
+        selectionClass => "selected",
+      },
+      ui => {
+        wrapperClass => "jqLikeUI ui-widget ui-like",
+        buttonClass => "ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" ,
+        buttonText => "ui-button-text",
+        iconClass => "ui-button-icon-primary ui-icon",
+        selectionClass => "selected ui-state-highlight",
+      }
+    },
     @_
   }, $class);
 
@@ -187,7 +207,7 @@ sub LIKE {
   return "" if $hideNull && !$likeCount && !$dislikeCount;
 
   my $context = Foswiki::Func::getContext();
-  my $editable = (!$context->{static} && $context->{authenticated})?" editable":"";
+  my $editable = (!$context->{static} && $context->{authenticated})?"editable":"";
 
   my $myLike = 0;
   my $myDislike = 0;
@@ -195,20 +215,20 @@ sub LIKE {
   ($myLike, $myDislike) = $this->getLikeOfUser($theWeb, $theTopic, $type, $id)
     if $editable;
 
-  my $likeSelected = ($myLike > 0)?' selected':'';
-  my $dislikeSelected = ($myDislike > 0)?' selected':'';
+  my $likeSelected = ($myLike > 0)?'%selectionClass%':'';
+  my $dislikeSelected = ($myDislike > 0)?'%selectionClass%':'';
 
-  my $result = $params->{format} // "<div class='jqLike %theme%%editable%' %params%>%like%%dislike%</div>";
+  my $result = $params->{format} // "<div class='jqLike %class% %wrapperClass% %editable%' %params%>%like%%dislike%</div>";
 
   my $showCount = Foswiki::Func::isTrue($params->{showcount}, 1);
-  my $countFormat = $showCount?"<span class='jqLikeCount'>%num%</span>":"";
+  my $countFormat = $showCount?"<span class='jqLikeCount %counterClass%'>%num%</span>":"";
 
-  my $likeFormat = $params->{likeformat} // "<div class='jqLikeButton%likeSelected%'><a href='#' title='%MAKETEXT{\"Click to vote\"}%'>%likeIcon%%thisLikeLabel%</a>%count%</div>";
+  my $likeFormat = $params->{likeformat} // "<div class='jqLikeButton %buttonClass% %likeSelected%'><span class='jqLikeButtonText %buttonText%'><a href='#' title='%MAKETEXT{\"Click to vote\"}%'>%likeIcon%%thisLikeLabel%</a>%count%</span></div>";
   $likeFormat =~ s/%count%/$countFormat/g;
   $likeFormat =~ s/%num%/%likeCount%/g;
 
   my $showDislike = Foswiki::Func::isTrue($params->{showdislike}, 1);
-  my $dislikeFormat = $showDislike?$params->{dislikeformat} // "<div class='jqDislikeButton%dislikeSelected%'><a href='#' title='%MAKETEXT{\"Click to vote\"}%'>%dislikeIcon%%thisDislikeLabel%</a>%count%</div>":"";
+  my $dislikeFormat = $showDislike?$params->{dislikeformat} // "<div class='jqDislikeButton %buttonClass% %dislikeSelected%'><spal class='jqLikeButtonText %buttonText%'><a href='#' title='%MAKETEXT{\"Click to vote\"}%'>%dislikeIcon%%thisDislikeLabel%</a>%count%</span></div>":"";
   $dislikeFormat =~ s/%count%/$countFormat/g;
   $dislikeFormat =~ s/%num%/%dislikeCount%/g;
 
@@ -235,8 +255,8 @@ sub LIKE {
   my $likeIcon = $params->{likeicon} // 'fa-thumbs-up';
   my $dislikeIcon = $params->{dislikeicon} // 'fa-thumbs-down';
 
-  $likeIcon = $likeIcon?"%JQICON{$likeIcon}%":"";
-  $dislikeIcon = $dislikeIcon?"%JQICON{$dislikeIcon}%":"";
+  $likeIcon = $likeIcon?"%JQICON{\"$likeIcon\" class=\"%iconClass%\"}%":"";
+  $dislikeIcon = $dislikeIcon?"%JQICON{\"$dislikeIcon\" class=\"%iconClass%\"}%":"";
 
   my $showIcon = Foswiki::Func::isTrue($params->{showicon}, 1);
   unless ($showIcon) {
@@ -247,8 +267,6 @@ sub LIKE {
   my $metaType = $params->{"metatype"} || '';
   my $metaId = $params->{"metaid"} || '';
 
-  my $theme = $THEMES{$params->{"theme"} || 'default'} || $THEMES{"default"};
-
   my @html5Params = ();
   push @html5Params, "data-web='$theWeb'";
   push @html5Params, "data-topic='$theTopic'";
@@ -258,7 +276,12 @@ sub LIKE {
   push @html5Params, "data-liked-label='%ENCODE{$likedLabel}%'" if $likedLabel;
   push @html5Params, "data-dislike-label='%ENCODE{$dislikeLabel}%'" if $dislikeLabel;
   push @html5Params, "data-disliked-label='%ENCODE{$dislikedLabel}%'" if $dislikedLabel;
+  push @html5Params, "data-likes='$likeCount'";
+  push @html5Params, "data-dislikes='$dislikeCount'";
+  push @html5Params, "data-selected-class='%selectionClass%'";
   my $html5Params = join(" ",@html5Params);
+
+  my $class = $params->{class} // "";
  
   $result =~ s/%like%/$likeFormat/g;
   $result =~ s/%dislike%/$dislikeFormat/g;
@@ -281,14 +304,32 @@ sub LIKE {
   $result =~ s/%topic%/$theTopic/g;
   $result =~ s/%metaType%/$metaType/g;
   $result =~ s/%metaId%/$metaId/g;
-  $result =~ s/%theme%/$theme/g;
+  $result =~ s/%class%/$class/g;
 
+  my $theme = $this->getTheme($params->{"theme"});
+  foreach my $key (qw(wrapperClass buttonClass buttonText iconClass counterClass selectionClass)) {
+    my $val = $theme->{$key} || '';
+    $result =~ s/%$key%/$val/g;
+  }
+
+  # hack ui
+  $result =~ s/ui-button-text-icon-primary/ui-button-text-only/g
+    unless $showIcon;
+  
   my $header = $params->{header} || '';
   my $footer = $params->{footer} || '';
 
   Foswiki::Plugins::JQueryPlugin::createPlugin("like");
 
   return Foswiki::Func::decodeFormatTokens($header.$result.$footer);
+}
+
+###############################################################################
+sub getTheme {
+  my ($this, $name) = @_;
+
+  $name ||= 'default',
+  return $this->{themes}{$name} || $this->{themes}{default};
 }
 
 ###############################################################################
@@ -329,6 +370,22 @@ sub jsonRpcVote {
     like => $like,
     dislike => $dislike,
   });
+
+  # trigger solr indexer
+  if ($Foswiki::cfg{Plugins}{SolrPlugin}{Enabled}) {
+    require Foswiki::Plugins::SolrPlugin;
+    my $indexer = Foswiki::Plugins::SolrPlugin::getIndexer();
+    $indexer->indexTopic($web, $topic);
+  }
+
+  # trigger dbcache indexer
+  if ($Foswiki::cfg{Plugins}{DBCachePlugin}{Enabled}) {
+    require Foswiki::Plugins::DBCachePlugin;
+    my $db = Foswiki::Plugins::DBCachePlugin::getDB($web);
+    my $obj = $db->fastget($topic);
+    $obj->set(".cache_time",0); # enforce a refresh
+    $db->loadTopic($web, $topic);
+  }
 
   my ($likes, $dislikes) = $this->getLikes($web, $topic, $metaType, $metaId);
 
@@ -388,6 +445,37 @@ sub getLikeOfUser {
   $dislike ||= 0;
 
   return ($like, $dislike);
+}
+
+##############################################################################
+sub solrIndexTopicHandler {
+  my ($this, $indexer, $doc, $web, $topic, $meta, $text) = @_;
+
+  $this->initDatabase;
+  my $sth = $this->getStatementHandler("select_likes");
+  my ($like, $dislike, $totalLike) = $this->{dbh}->selectrow_array($sth, undef, $web, $topic, "", "");
+
+  #print STDERR "like=$like, dislike=$dislike, totalLike=$totalLike\n";
+
+  $doc->add_fields(
+    'field_like_i' => $like,
+    'field_dislike_i' => $dislike,
+    'field_total_like_i' => $totalLike,
+  );
+}
+
+##############################################################################
+sub dbcacheIndexTopicHandler {
+  my ($this, $db, $obj, $web, $topic, $meta, $text) = @_;
+
+  $this->initDatabase;
+  my $sth = $this->getStatementHandler("select_likes");
+  my ($like, $dislike, $totalLike) = $this->{dbh}->selectrow_array($sth, undef, $web, $topic, "", "");
+
+  #print STDERR "like=$like, dislike=$dislike, totalLike=$totalLike\n";
+  $obj->set("likes", $like);
+  $obj->set("dislikes", $dislike);
+  $obj->set("totallikes", $totalLike);
 }
 
 1;

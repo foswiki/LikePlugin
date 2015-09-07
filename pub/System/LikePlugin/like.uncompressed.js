@@ -1,5 +1,5 @@
 /*
- * jQuery like plugin 0.01
+ * jQuery like plugin 0.02
  *
  * Copyright (c) 2015 Michael Daum http://michaeldaumconsulting.com
  *
@@ -31,9 +31,9 @@
 
     self.likeButton = self.elem.find(".jqLikeButton");
     self.dislikeButton = self.elem.find(".jqDislikeButton");
-    self.likes = parseInt(self.likeButton.find(".jqLikeCount").text(), 10);
-    self.dislikes = parseInt(self.dislikeButton.find(".jqLikeCount").text(), 10);
-    
+    self.likes = self.opts.likes;
+    self.dislikes = self.opts.dislikes;
+
     self.likeButton.on("click", function() {
       if (self.likeButton.is(".selected")) {
         self.vote(0);
@@ -109,19 +109,19 @@
         likeLabelElem = self.likeButton.find(".jqLikeLabel"),
         dislikeLabelElem = self.dislikeButton.find(".jqLikeLabel");
 
-    self.likeButton.removeClass("selected");
-    self.dislikeButton.removeClass("selected");
-    likeLabelElem.html(decodeURI(self.opts.likeLabel));
-    dislikeLabelElem.html(decodeURI(self.opts.dislikeLabel));
+    self.likeButton.removeClass(self.opts.selectedClass);
+    self.dislikeButton.removeClass(self.opts.selectedClass);
+    likeLabelElem.html(decodeURIComponent(self.opts.likeLabel));
+    dislikeLabelElem.html(decodeURIComponent(self.opts.dislikeLabel));
 
     if (self.likes < likes) {
-      self.likeButton.addClass("selected");
-      likeLabelElem.html(decodeURI(self.opts.likedLabel));
+      self.likeButton.addClass(self.opts.selectedClass);
+      likeLabelElem.html(decodeURIComponent(self.opts.likedLabel));
     } 
 
     if (self.dislikes < dislikes) {
-      self.dislikeButton.addClass("selected");
-      dislikeLabelElem.html(decodeURI(self.opts.dislikedLabel));
+      self.dislikeButton.addClass(self.opts.selectedClass);
+      dislikeLabelElem.html(decodeURIComponent(self.opts.dislikedLabel));
     }
 
     self.likeButton.find(".jqLikeCount").text(likes);

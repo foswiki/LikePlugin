@@ -31,7 +31,7 @@ sub new {
     $class->SUPER::new(
       $session,
       name => 'Like',
-      version => '0.01',
+      version => '0.02',
       author => 'Michael Daum',
       homepage => 'http://foswiki.org/Extensions/LikePlugin',
       puburl => '%PUBURLPATH%/%SYSTEMWEB%/LikePlugin',
