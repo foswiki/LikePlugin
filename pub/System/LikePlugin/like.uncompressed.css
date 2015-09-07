@@ -13,6 +13,9 @@
 .jqLikeCount {
   text-align:center;
 }
+.jqLike a:focus {
+  outline:none;
+}
 
 /* default theme */
 .jqLikeDefault a {
@@ -104,13 +107,81 @@
   -webkit-filter:none;
 }
 .jqLikeSimple .jqLikeLabel {
-  margin:0;
-}
-.jqLikeSimple .jqLikeCount {
-  padding:0 0 0 0.25em;
+  padding-right:0.25em;
 }
 .jqLikeSimple .jqLikeButton.selected .jqIcon,
 .jqLikeSimple .jqDislikeButton.selected .jqIcon {
   color:#3D8FE0;
 }
 
+/* button */
+.jqLikePattern .jqLikeButton,
+.jqLikePattern .jqDislikeButton {
+  padding: 3px 9.799999999999999px 3px 9.799999999999999px;
+
+  line-height: 20px;
+  text-align: center;
+
+  vertical-align: middle;
+  cursor: pointer;
+
+  box-shadow: none;
+  border: 1px solid #d2d2d2;
+  border-radius:3px;
+
+  font-family: sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 14px;
+  margin: 0 0 6px 6px;
+
+  color: #555555;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+
+  background-color: #f3f3f3;
+  background-image: -moz-linear-gradient(top, #f8f8f8, #ebebeb);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#f8f8f8), to(#ebebeb));
+  background-image: -webkit-linear-gradient(top, #f8f8f8, #ebebeb);
+  background-image: -o-linear-gradient(top, #f8f8f8, #ebebeb);
+  background-image: linear-gradient(to bottom, #f8f8f8, #ebebeb);
+
+}
+.jqLikePattern .jqLikeLabel {
+  padding-right:0.5em;
+}
+.jqLikeButton a,
+.jqDislikeButton a,
+.jqLikeButton a:hover,
+.jqDislikeButton a:hover {
+  color: #555555;
+  text-decoration: none;
+}
+.jqLikePattern .jqLikeButton:hover {
+  color: #484848;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+
+  background-color: #e6e6e6;
+  background-image: -moz-linear-gradient(top, #ebebeb, #dfdfdf);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ebebeb), to(#dfdfdf));
+  background-image: -webkit-linear-gradient(top, #ebebeb, #dfdfdf);
+  background-image: -o-linear-gradient(top, #ebebeb, #dfdfdf);
+  background-image: linear-gradient(to bottom, #ebebeb, #dfdfdf);
+
+  border: 1px solid #c5c5c5;
+}
+.jqLikePattern .jqIcon {
+  margin: 0 9.799999999999999px 0 0;
+  filter: url("data:image/svg+xml;utf8,&lt;svg xmlns=\'http://www.w3.org/2000/svg\'&gt;&lt;filter id=\'grayscale\'&gt;&lt;feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/&gt;&lt;/filter&gt;&lt;/svg&gt;#grayscale"); /* Firefox 10+, Firefox on Android */
+  filter: gray; /* IE6-9 */
+  filter: grayscale(100%); /* W3C */
+  -webkit-filter: grayscale(100%); /* Chrome 19+, Safari 6+, Safari 6+ iOS */
+}
+.jqLikePattern .jqLikeButton.selected .jqIcon,
+.jqLikePattern .jqDislikeButton.selected .jqIcon {
+  filter:none;
+  -webkit-filter:none;
+}
+.jqLikePattern .jqLikeCount {
+  border-left:1px solid #d2d2d2;
+  padding-left:0.5em;
+}

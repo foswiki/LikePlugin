@@ -63,6 +63,7 @@ our %THEMES = (
   gray => "jqLikeDefault jqLikeGray",
   black => "jqLikeDefault jqLikeBlack",
   simple => "jqLikeSimple",
+  pattern => "jqLikePattern"
 );
 
 ###############################################################################
@@ -197,17 +198,17 @@ sub LIKE {
   my $likeSelected = ($myLike > 0)?' selected':'';
   my $dislikeSelected = ($myDislike > 0)?' selected':'';
 
-  my $result = $params->{format} // "<div class='jqLike %theme%%editable%' data-web='%web%' data-topic='%topic%' data-meta-type='%metaType%' data-meta-id='%metaId%' data-like-label='%ENCODE{\"%likeLabel%\"}%' data-liked-label='%ENCODE{\"%likedLabel%\"}%' data-dislike-label='%ENCODE{\"%dislikeLabel%\"}%' data-disliked-label='%ENCODE{\"%dislikedLabel%\"}%'>%like%%dislike%</div>";
+  my $result = $params->{format} // "<div class='jqLike %theme%%editable%' %params%>%like%%dislike%</div>";
 
   my $showCount = Foswiki::Func::isTrue($params->{showcount}, 1);
   my $countFormat = $showCount?"<span class='jqLikeCount'>%num%</span>":"";
 
-  my $likeFormat = $params->{likeformat} // "<div class='jqLikeButton%likeSelected%'><a href='#'>%likeIcon%%thisLikeLabel%</a>%count%</div>";
+  my $likeFormat = $params->{likeformat} // "<div class='jqLikeButton%likeSelected%'><a href='#' title='%MAKETEXT{\"Click to vote\"}%'>%likeIcon%%thisLikeLabel%</a>%count%</div>";
   $likeFormat =~ s/%count%/$countFormat/g;
   $likeFormat =~ s/%num%/%likeCount%/g;
 
   my $showDislike = Foswiki::Func::isTrue($params->{showdislike}, 1);
-  my $dislikeFormat = $showDislike?$params->{dislikeformat} // "<div class='jqDislikeButton%dislikeSelected%'><a href='#'>%dislikeIcon%%thisDislikeLabel%</a>%count%</div>":"";
+  my $dislikeFormat = $showDislike?$params->{dislikeformat} // "<div class='jqDislikeButton%dislikeSelected%'><a href='#' title='%MAKETEXT{\"Click to vote\"}%'>%dislikeIcon%%thisDislikeLabel%</a>%count%</div>":"";
   $dislikeFormat =~ s/%count%/$countFormat/g;
   $dislikeFormat =~ s/%num%/%dislikeCount%/g;
 
@@ -248,8 +249,20 @@ sub LIKE {
 
   my $theme = $THEMES{$params->{"theme"} || 'default'} || $THEMES{"default"};
 
+  my @html5Params = ();
+  push @html5Params, "data-web='$theWeb'";
+  push @html5Params, "data-topic='$theTopic'";
+  push @html5Params, "data-meta-type='$metaType'" if $metaType;
+  push @html5Params, "data-meta-id='$metaId'" if $metaId;
+  push @html5Params, "data-like-label='%ENCODE{$likeLabel}%'" if $likeLabel;
+  push @html5Params, "data-liked-label='%ENCODE{$likedLabel}%'" if $likedLabel;
+  push @html5Params, "data-dislike-label='%ENCODE{$dislikeLabel}%'" if $dislikeLabel;
+  push @html5Params, "data-disliked-label='%ENCODE{$dislikedLabel}%'" if $dislikedLabel;
+  my $html5Params = join(" ",@html5Params);
+ 
   $result =~ s/%like%/$likeFormat/g;
   $result =~ s/%dislike%/$dislikeFormat/g;
+  $result =~ s/%params%/$html5Params/g;
 
   $result =~ s/%likeLabel%/$likeLabel/g;
   $result =~ s/%likedLabel%/$likedLabel/g;
@@ -270,10 +283,10 @@ sub LIKE {
   $result =~ s/%metaId%/$metaId/g;
   $result =~ s/%theme%/$theme/g;
 
-  Foswiki::Plugins::JQueryPlugin::createPlugin("like");
-
   my $header = $params->{header} || '';
   my $footer = $params->{footer} || '';
+
+  Foswiki::Plugins::JQueryPlugin::createPlugin("like");
 
   return Foswiki::Func::decodeFormatTokens($header.$result.$footer);
 }

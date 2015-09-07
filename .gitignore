@@ -1,5 +1,6 @@
 *.swp
 *,v
 *.gz
+*~
 pub/System/LikePlugin/like.css
 pub/System/LikePlugin/like.js

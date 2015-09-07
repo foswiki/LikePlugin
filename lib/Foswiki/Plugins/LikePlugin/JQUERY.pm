@@ -38,7 +38,7 @@ sub new {
       documentation => '%SYSTEMWEB%.LikePlugin',
       javascript => ['like.js'],
       css => ['like.css'],
-      dependencies => ['jsonrpc', 'blockui', 'livequery', 'pnotify', 'JQUERYPLUGIN::FOSWIKI'],
+      dependencies => ['jsonrpc', 'blockui', 'livequery', 'pnotify'],
     ),
     $class
   );
