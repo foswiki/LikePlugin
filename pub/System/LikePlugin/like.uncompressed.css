@@ -1,0 +1,116 @@
+/* reset */
+.jqLike,
+.jqLike a,
+.jqLikeButton,
+.jqLikeCount,
+.jqDislikeButton {
+  display:inline-block;
+}
+.jqLike a,
+.jqLike a:hover {
+  text-decoration:none;
+}
+.jqLikeCount {
+  text-align:center;
+}
+
+/* default theme */
+.jqLikeDefault a {
+  color:#555;
+}
+.jqLikeDefault .jqLikeButton,
+.jqLikeDefault .jqDislikeButton {
+  background-color:#fff;
+  border:1px solid #c6c6c6;
+  color:#555;
+  margin-right:0.5em;
+  padding:0 0.5em;
+  border-radius:2px;
+}
+.jqLikeDefault .jqIcon {
+  padding-right:0.5em;
+}
+.jqLikeDefault .jqLikeLabel {
+  padding-right:0.5em;
+}
+.jqLikeDefault .jqLikeCount {
+  border-left:1px solid #c6c6c6;
+  padding-left:0.5em;
+}
+.jqLikeDefault .jqLikeButton.selected .jqIcon,
+.jqLikeDefault .jqDislikeButton.selected .jqIcon {
+  color:#3D8FE0;
+}
+
+/* lightgray theme */
+.jqLikeLightGray a {
+  color:#000;
+}
+.jqLikeLightGray .jqLikeCount,
+.jqLikeLightGray .jqLikeButton, 
+.jqLikeLightGray .jqDislikeButton {
+  background-color:#ddd;
+  color:#000;
+  border-color:#a9a9a9;
+}
+
+/* gray theme */
+.jqLikeGray a {
+  color:#f2f2f2;
+}
+.jqLikeGray .jqLikeCount {
+  border-color:#f2f2f2;
+}
+.jqLikeGray .jqLikeButton, 
+.jqLikeGray .jqDislikeButton {
+  background-color:#787878;
+  color:#f2f2f2;
+  border-color:#787878;
+}
+.jqLikeGray a:hover,
+.jqLikeGray .jqLikeButton.selected .jqIcon,
+.jqLikeGray .jqDislikeButton.selected .jqIcon {
+  color:#F1F139;
+}
+
+/* black theme */
+.jqLikeBlack a {
+  color:#fff;
+}
+.jqLikeBlack .jqLikeCount {
+  border-color:#888;
+}
+.jqLikeBlack .jqLikeButton, 
+.jqLikeBlack .jqDislikeButton {
+  background-color:#000;
+  color:#fff;
+  border-color:#000;
+}
+
+/* simple */
+.jqLikeSimple .jqIcon {
+  margin:0 0.25em 0 0;
+  filter: url("data:image/svg+xml;utf8,&lt;svg xmlns=\'http://www.w3.org/2000/svg\'&gt;&lt;filter id=\'grayscale\'&gt;&lt;feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/&gt;&lt;/filter&gt;&lt;/svg&gt;#grayscale"); /* Firefox 10+, Firefox on Android */
+  filter: gray; /* IE6-9 */
+  filter: grayscale(100%); /* W3C */
+  -webkit-filter: grayscale(100%); /* Chrome 19+, Safari 6+, Safari 6+ iOS */
+}
+.jqLikeSimple .jqDislikeButton {
+  margin-left:0.5em;
+}
+.jqLikeSimple .jqLikeButton.selected .jqIcon,
+.jqLikeSimple .jqDislikeButton.selected .jqIcon {
+  filter:none;
+  -webkit-filter:none;
+}
+.jqLikeSimple .jqLikeLabel {
+  margin:0;
+}
+.jqLikeSimple .jqLikeCount {
+  padding:0 0 0 0.25em;
+}
+.jqLikeSimple .jqLikeButton.selected .jqIcon,
+.jqLikeSimple .jqDislikeButton.selected .jqIcon {
+  color:#3D8FE0;
+}
+
