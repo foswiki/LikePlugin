@@ -1,5 +1,6 @@
-# Dependencies for LikePlugin
-# Example:
-# Time::ParseDate,>=2003.0211,cpan,Required.
-# Foswiki::Plugins,>=1.2,perl,Requires version 1.2 of handler API.
-
+DBI,>=1.0,cpan,Required
+DBD::SQLite,>=3.0,cpan,Recommended.
+Foswiki::Plugins::JQueryPlugin,>=6.00,perl,Required
+Foswiki::Contrib::JsonRpcContrib,>=2.21,perl,Required
+Foswiki::Plugins::DBCachePlugin,>=8.10,perl,Optional
+Foswiki::Plugins::SolrPlugin,>=4.10,perl,Optional

@@ -29,7 +29,7 @@
   color:#555;
   margin-right:0.5em;
   padding:0 0.5em;
-  border-radius:3px;
+  border-radius:0px;
 }
 .jqLikeDefault .jqIcon {
   padding-right:0.5em;
@@ -51,7 +51,7 @@
 /* padding theme */
 .jqLikePadding .jqLikeButtonText,
 .jqLikePadding .jqDislikeButtonText {
-  padding:0.25em;
+  padding:0.5em;
 }
 
 .jqLikePadding .jqIcon {
@@ -220,6 +220,7 @@
 .jqLikeUI .jqLikeButton,
 .jqLikeUI .jqDislikeButton {
   margin-right:0.5em;
+  font-weight:normal;
 }
 .jqLikeUI .jqIcon {
   padding-right:0.5em;
@@ -243,3 +244,46 @@
 .jqLikeUI .jqDislikeButton.selected .jqIcon {
   color:#F87A7A;
 }
+
+/* flat theme */
+.jqLikeFlat .jqLikeButton,
+.jqLikeFlat .jqDislikeButton {
+  background-color:#3D8FE0;
+  border:0;
+  color:#fff;
+  padding:0.75em 1em;
+  overflow:hidden;
+  transition:all 100ms;
+}
+.jqLikeFlat .jqLikeButton:hover,
+.jqLikeFlat .jqDislikeButton:hover {
+  background-color:#217AD2;
+}
+.jqLikeFlat a,
+.jqLikeFlat a:hover {
+  color:#fff;
+}
+.jqLikeFlat .jqIcon {
+  font-size:20px;
+  color:#fff;
+}
+.jqLikeFlat .jqLikeLabel {
+  padding-right:10px;
+}
+.jqLikeFlat .jqLikeButton.selected .jqIcon,
+.jqLikeFlat .jqDislikeButton.selected .jqIcon {
+  color:inherit;
+}
+
+.jqLikeFlat .jqLikeCount {
+  border-color:#216AB3;
+  padding:0 0 0 10px;
+}
+.jqLikeFlat .jqLikeButton.selected { background-color:#1DBF66; }
+.jqLikeFlat .jqLikeButton.selected .jqLikeCount { border-color:#007735; }
+.jqLikeFlat .jqLikeButton.selected:hover { background-color:#0DA250; }
+
+.jqLikeFlat .jqDislikeButton.selected { background-color:#D4564C; }
+.jqLikeFlat .jqDislikeButton.selected .jqLikeCount { border-color:#8E180E; }
+.jqLikeFlat .jqDislikeButton.selected:hover { background-color:#BF4035; }
+

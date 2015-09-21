@@ -17,10 +17,14 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 2.1\n"
 
-#: lib/Foswiki/Plugins/LikePlugin/Core.pm:220
+#: lib/Foswiki/Plugins/LikePlugin/Core.pm:244
+msgid "Click to vote"
+msgstr "Klicken, um zu wählen"
+
+#: data/System/LikePlugin.txt:130 lib/Foswiki/Plugins/LikePlugin/Core.pm:263
 msgid "I don&#39;t like this"
 msgstr "Ich mag das nicht"
 
-#: lib/Foswiki/Plugins/LikePlugin/Core.pm:215
+#: data/System/LikePlugin.txt:120 lib/Foswiki/Plugins/LikePlugin/Core.pm:258
 msgid "I like this"
 msgstr "Ich mag das"

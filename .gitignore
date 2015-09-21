@@ -2,5 +2,13 @@
 *,v
 *.gz
 *~
+igp_*
 pub/System/LikePlugin/like.css
 pub/System/LikePlugin/like.js
+LikePlugin_installer
+LikePlugin_installer.pl
+LikePlugin.md5
+LikePlugin.sha1
+LikePlugin.tgz
+LikePlugin.txt
+LikePlugin.zip

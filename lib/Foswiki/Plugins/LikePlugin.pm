@@ -22,38 +22,43 @@ use Foswiki::Func ();
 use Foswiki::Plugins::JQueryPlugin ();
 use Foswiki::Contrib::JsonRpcContrib ();
 
-our $VERSION = '0.01';
-our $RELEASE = '07 Sep 2015';
+our $VERSION = '1.00';
+our $RELEASE = '21 Sep 2015';
 our $SHORTDESCRIPTION = 'Like-style voting for content';
 our $NO_PREFS_IN_TOPIC = 1;
 our $core;
+our @knownAfterLikeHandler = ();
 
 sub initPlugin {
 
-  Foswiki::Func::registerTagHandler('LIKE', sub { return core()->LIKE(@_); });
+  Foswiki::Func::registerTagHandler('LIKE', sub { return getCore()->LIKE(@_); });
   Foswiki::Plugins::JQueryPlugin::registerPlugin('Like', 'Foswiki::Plugins::LikePlugin::JQUERY');
   Foswiki::Contrib::JsonRpcContrib::registerMethod("LikePlugin", "vote", sub {
-    return core()->jsonRpcVote(@_);
+    return getCore()->jsonRpcVote(@_);
   });
 
   if ($Foswiki::cfg{Plugins}{SolrPlugin}{Enabled}) {
     require Foswiki::Plugins::SolrPlugin;
     Foswiki::Plugins::SolrPlugin::registerIndexTopicHandler(sub {
-      return core()->solrIndexTopicHandler(@_);
+      return getCore()->solrIndexTopicHandler(@_);
     });
   }
 
   if ($Foswiki::cfg{Plugins}{DBCachePlugin}{Enabled}) {
     require Foswiki::Plugins::DBCachePlugin;
     Foswiki::Plugins::DBCachePlugin::registerIndexTopicHandler(sub {
-      return core()->dbcacheIndexTopicHandler(@_);
+      return getCore()->dbcacheIndexTopicHandler(@_);
     });
   }
 
   return 1;
 }
 
-sub core {
+sub afterRenameHandler {
+  return getCore()->afterRenameHandler(@_);
+}
+
+sub getCore {
   unless (defined $core) {
     require Foswiki::Plugins::LikePlugin::Core;
     $core = new Foswiki::Plugins::LikePlugin::Core();
@@ -61,8 +66,15 @@ sub core {
   return $core;
 }
 
+sub registerAfterLikeHandler {
+  push @knownAfterLikeHandler, shift;
+}
+
 sub finishPlugin {
   undef $core;
+
+  @knownAfterLikeHandler = ();
 }
+
 
 1;

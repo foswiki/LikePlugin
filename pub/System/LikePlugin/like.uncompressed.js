@@ -1,5 +1,5 @@
 /*
- * jQuery like plugin 0.02
+ * jQuery like plugin 1.00
  *
  * Copyright (c) 2015 Michael Daum http://michaeldaumconsulting.com
  *
@@ -34,23 +34,25 @@
     self.likes = self.opts.likes;
     self.dislikes = self.opts.dislikes;
 
-    self.likeButton.on("click", function() {
-      if (self.likeButton.is(".selected")) {
-        self.vote(0);
-      } else {
-        self.vote(1);
-      }
-      return false;
-    });
+    if (self.elem.is(".editable")) {
+      self.likeButton.on("click", function() {
+        if (self.likeButton.is(".selected")) {
+          self.vote(0);
+        } else {
+          self.vote(1);
+        }
+        return false;
+      });
 
-    self.dislikeButton.on("click", function() {
-      if (self.dislikeButton.is(".selected")) {
-        self.vote(0);
-      } else {
-        self.vote(-1);
-      }
-      return false;
-    });
+      self.dislikeButton.on("click", function() {
+        if (self.dislikeButton.is(".selected")) {
+          self.vote(0);
+        } else {
+          self.vote(-1);
+        }
+        return false;
+      });
+    }
 
     $(document).on("change.likes", function(ev, opts) {
       if (typeof(opts) !== 'undefined') {
@@ -69,13 +71,14 @@
     var self = this;
     flag = parseInt(flag, 10);
     self.hideMessages();
+
     $.jsonRpc(foswiki.getScriptUrl("jsonrpc"), {
       namespace: "LikePlugin",
       method: "vote",
       params: {
         topic: self.opts.web+'.'+self.opts.topic,
-        metaType: self.opts.metaType,
-        metaId: self.opts.metaId,
+        type: self.opts.metaType,
+        id: self.opts.metaId,
         like: flag>0?1:0,
         dislike: flag<0?1:0
       },
@@ -158,7 +161,7 @@
   } 
 
   // Enable declarative widget instanziation 
-  $(".jqLike.editable:not(.jqLikeInited)").livequery(function() {
+  $(".jqLike:not(.jqLikeInited)").livequery(function() {
     $(this).addClass("jqLikeInited").like();
   });
 

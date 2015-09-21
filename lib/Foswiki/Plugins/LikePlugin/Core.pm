@@ -18,6 +18,7 @@ package Foswiki::Plugins::LikePlugin::Core;
 use strict;
 use warnings;
 
+use Foswiki::Plugins::LikePlugin ();
 use Foswiki::Func ();
 use Error qw(:try);
 use DBI ();
@@ -39,13 +40,26 @@ HERE
         meta_id = ? and
         username = ?
 HERE
-
   'select_likes' => <<'HERE',
       select sum(like), sum(dislike), sum(like)-sum(dislike) from %likesTable% where
         web = ? and 
         topic = ? and 
         meta_type = ? and
         meta_id = ? 
+HERE
+  'rename_meta' => <<'HERE',
+      update %likesTable% 
+        set meta_id = ?, web = ?, topic = ?  where 
+        web = ? and
+        topic = ? and 
+        meta_type = ? and
+        meta_id = ? 
+HERE
+  'rename_topic' => <<'HERE',
+      update %likesTable% 
+        set web = ?, topic = ?  where 
+        web = ? and
+        topic = ? 
 HERE
 );
 
@@ -68,6 +82,10 @@ sub new {
     themes => $Foswiki::cfg{LikePlugin}{Themes} || {
       default => {
         wrapperClass => "jqLikeDefault",
+        selectionClass => "selected",
+      },
+      flat => {
+        wrapperClass => "jqLikeDefault jqLikeFlat",
         selectionClass => "selected",
       },
       padding => {
@@ -107,6 +125,8 @@ sub new {
 
   $this->{likesTable} = $this->{tablePrefix}.'likes';
 
+  $this->initDatabase;
+
   return $this;
 }
 
@@ -131,7 +151,7 @@ sub initDatabase {
 
   unless (defined $this->{dbh}) {
 
-    writeDebug("connect database");
+    #writeDebug("connect database");
     $this->{dbh} = DBI->connect(
       $this->{dsn},
       $this->{username},
@@ -194,25 +214,23 @@ sub getStatementHandler {
 sub LIKE {
   my ($this, $session, $params, $topic, $web) = @_;
 
-  writeDebug("called LIKE()");
+  #writeDebug("called LIKE()");
 
   my ($theWeb, $theTopic) = Foswiki::Func::normalizeWebTopicName($params->{web} || $web, $params->{_DEFAULT} || $params->{topic} || $topic);
-  my $type = $params->{type};
-  my $id = $params->{id};
+  my $metaType = $params->{type};
+  my $metaId = $params->{id};
   my $hideNull = Foswiki::Func::isTrue($params->{hidenull}, 0);
 
-  $this->initDatabase;
-
-  my ($likeCount, $dislikeCount) = $this->getLikes($theWeb, $theTopic, $type, $id);
+  my ($likeCount, $dislikeCount) = $this->getLikes($theWeb, $theTopic, $metaType, $metaId);
   return "" if $hideNull && !$likeCount && !$dislikeCount;
 
   my $context = Foswiki::Func::getContext();
-  my $editable = (!$context->{static} && $context->{authenticated})?"editable":"";
+  my $editable = (Foswiki::Func::isTrue($params->{editable}, 1) && !$context->{static} && $context->{authenticated})?"editable":"";
 
   my $myLike = 0;
   my $myDislike = 0;
 
-  ($myLike, $myDislike) = $this->getLikeOfUser($theWeb, $theTopic, $type, $id)
+  ($myLike, $myDislike) = $this->getLikeOfUser($theWeb, $theTopic, $metaType, $metaId)
     if $editable;
 
   my $likeSelected = ($myLike > 0)?'%selectionClass%':'';
@@ -223,14 +241,19 @@ sub LIKE {
   my $showCount = Foswiki::Func::isTrue($params->{showcount}, 1);
   my $countFormat = $showCount?"<span class='jqLikeCount %counterClass%'>%num%</span>":"";
 
-  my $likeFormat = $params->{likeformat} // "<div class='jqLikeButton %buttonClass% %likeSelected%'><span class='jqLikeButtonText %buttonText%'><a href='#' title='%MAKETEXT{\"Click to vote\"}%'>%likeIcon%%thisLikeLabel%</a>%count%</span></div>";
+  my $tooltip = $params->{tooltip} // '%MAKETEXT{"Click to vote"}%';
+  $tooltip = $editable?"title='$tooltip'":"";
+
+  my $likeFormat = $params->{likeformat} // "<div class='jqLikeButton %buttonClass% %likeSelected%'><span class='jqLikeButtonText %buttonText%'><a href='#' %tooltip%>%likeIcon%%thisLikeLabel%</a>%count%</span></div>";
   $likeFormat =~ s/%count%/$countFormat/g;
   $likeFormat =~ s/%num%/%likeCount%/g;
+  $likeFormat =~ s/%tooltip%/$tooltip/g;
 
   my $showDislike = Foswiki::Func::isTrue($params->{showdislike}, 1);
-  my $dislikeFormat = $showDislike?$params->{dislikeformat} // "<div class='jqDislikeButton %buttonClass% %dislikeSelected%'><spal class='jqLikeButtonText %buttonText%'><a href='#' title='%MAKETEXT{\"Click to vote\"}%'>%dislikeIcon%%thisDislikeLabel%</a>%count%</span></div>":"";
+  my $dislikeFormat = $showDislike?$params->{dislikeformat} // "<div class='jqDislikeButton %buttonClass% %dislikeSelected%'><span class='jqLikeButtonText %buttonText%'><a href='#' %tooltip%'>%dislikeIcon%%thisDislikeLabel%</a>%count%</span></div>":"";
   $dislikeFormat =~ s/%count%/$countFormat/g;
   $dislikeFormat =~ s/%num%/%dislikeCount%/g;
+  $dislikeFormat =~ s/%tooltip%/$tooltip/g;
 
   my $likeLabel = $params->{likelabel} // '%MAKETEXT{"I like this"}%';
   my $likedLabel = $params->{likedlabel} // $likeLabel;
@@ -264,9 +287,6 @@ sub LIKE {
     $dislikeIcon = "";
   }
 
-  my $metaType = $params->{"metatype"} || '';
-  my $metaId = $params->{"metaid"} || '';
-
   my @html5Params = ();
   push @html5Params, "data-web='$theWeb'";
   push @html5Params, "data-topic='$theTopic'";
@@ -282,6 +302,8 @@ sub LIKE {
   my $html5Params = join(" ",@html5Params);
 
   my $class = $params->{class} // "";
+
+  my $totalLikes = $likeCount - $dislikeCount;
  
   $result =~ s/%like%/$likeFormat/g;
   $result =~ s/%dislike%/$dislikeFormat/g;
@@ -297,6 +319,7 @@ sub LIKE {
   $result =~ s/%dislikeIcon%/$dislikeIcon/g;
   $result =~ s/%likeCount%/$likeCount/g;
   $result =~ s/%dislikeCount%/$dislikeCount/g;
+  $result =~ s/%totalLikeCount%/$totalLikes/g;
   $result =~ s/%likeSelected%/$likeSelected/g;
   $result =~ s/%dislikeSelected%/$dislikeSelected/g;
   $result =~ s/%editable%/$editable/g;
@@ -351,17 +374,15 @@ sub jsonRpcVote {
     $userName = $override if defined $override;
   }
 
-  my $metaType = $request->param("meta_type") || '';
-  my $metaId = $request->param("meta_id") || '';
+  my $metaType = $request->param("type") || '';
+  my $metaId = $request->param("id") || '';
 
   my $like = $request->param("like") || 0;
   my $dislike= $request->param("dislike") || 0;
 
   writeDebug("called jsonRpcVote(), topic=$web.$topic, userName=$userName, like=$like, dislike=$dislike");
 
-  $this->initDatabase;
-
-  $this->like({
+  my ($likes, $dislikes) = $this->like({
     web => $web,
     topic => $topic,
     metaType => $metaType,
@@ -387,8 +408,6 @@ sub jsonRpcVote {
     $db->loadTopic($web, $topic);
   }
 
-  my ($likes, $dislikes) = $this->getLikes($web, $topic, $metaType, $metaId);
-
   return {
     likes => $likes,
     dislikes => $dislikes,
@@ -400,18 +419,36 @@ sub like {
   my ($this, $record) = @_;
 
   my $sth = $this->getStatementHandler("insert_like");
+
+  $record->{userName} ||=  Foswiki::Func::getWikiName();
+  $record->{timestamp} ||= time();
+
+  $record->{like} = $record->{like}?1:0;
+  $record->{dislike} = $record->{dislike}?1:0;
+
   $sth->execute(
     # web, topic, meta_type, meta_id, username, like, dislike, timestamp
     $record->{web},
     $record->{topic},
     $record->{metaType},
     $record->{metaId},
-    $record->{userName} ||  Foswiki::Func::getWikiName(),
-    $record->{like}?1:0,
-    $record->{dislike}?1:0,
-    $record->{timestamp} || time(),
+    $record->{userName},
+    $record->{like},
+    $record->{dislike},
+    $record->{timestamp},
   );
 
+  my ($likes, $dislikes) = $this->getLikes($record->{web}, $record->{topic}, $record->{metaType}, $record->{metaId});
+
+  # call after like handlers
+  my %seen;
+  foreach my $sub (@Foswiki::Plugins::LikePlugin::knownAfterLikeHandler) {
+    next if $seen{$sub};
+    &$sub($record->{web}, $record->{topic}, $record->{metaType}, $record->{metaId}, $record->{userName}, $likes, $dislikes);
+    $seen{$sub} = 1;
+  }
+
+  return ($likes, $dislikes);
 }
 
 ###############################################################################
@@ -439,32 +476,31 @@ sub getLikeOfUser {
   $wikiName ||= Foswiki::Func::getWikiName();
 
   my $sth = $this->getStatementHandler("select_like_of_user");
-  my ($like, $dislike) = $this->{dbh}->selectrow_array($sth, undef, $web, $topic, $type, $id, $wikiName);
+  my ($likes, $dislikes) = $this->{dbh}->selectrow_array($sth, undef, $web, $topic, $type, $id, $wikiName);
 
-  $like ||= 0;
-  $dislike ||= 0;
+  $likes ||= 0;
+  $dislikes ||= 0;
 
-  return ($like, $dislike);
+  return ($likes, $dislikes);
 }
 
 ##############################################################################
 sub solrIndexTopicHandler {
   my ($this, $indexer, $doc, $web, $topic, $meta, $text) = @_;
 
-  $this->initDatabase;
   my $sth = $this->getStatementHandler("select_likes");
-  my ($like, $dislike, $totalLike) = $this->{dbh}->selectrow_array($sth, undef, $web, $topic, "", "");
+  my ($likes, $dislikes, $totalLikes) = $this->{dbh}->selectrow_array($sth, undef, $web, $topic, "", "");
 
-  $like ||= 0;
-  $dislike ||= 0;
-  $totalLike ||= 0;
+  $likes ||= 0;
+  $dislikes ||= 0;
+  $totalLikes ||= 0;
 
-  #print STDERR "like=$like, dislike=$dislike, totalLike=$totalLike\n";
+  #print STDERR "likes=$likes, dislikes=$dislikes, totalLikes=$totalLikes\n";
 
   $doc->add_fields(
-    'field_like_i' => $like,
-    'field_dislike_i' => $dislike,
-    'field_total_like_i' => $totalLike,
+    'likes' => $likes,
+    'dislikes' => $dislikes,
+    'total_likes' => $totalLikes,
   );
 }
 
@@ -472,19 +508,39 @@ sub solrIndexTopicHandler {
 sub dbcacheIndexTopicHandler {
   my ($this, $db, $obj, $web, $topic, $meta, $text) = @_;
 
-  $this->initDatabase;
   my $sth = $this->getStatementHandler("select_likes");
-  my ($like, $dislike, $totalLike) = $this->{dbh}->selectrow_array($sth, undef, $web, $topic, "", "");
+  my ($likes, $dislikes, $totalLikes) = $this->{dbh}->selectrow_array($sth, undef, $web, $topic, "", "");
 
-  $like ||= 0;
-  $dislike ||= 0;
-  $totalLike ||= 0;
+  $likes ||= 0;
+  $dislikes ||= 0;
+  $totalLikes ||= 0;
 
-  #print STDERR "like=$like, dislike=$dislike, totalLike=$totalLike\n";
+  #print STDERR "like=$likes, dislike=$dislikes, totalLike=$totalLikes\n";
 
-  $obj->set("likes", $like);
-  $obj->set("dislikes", $dislike);
-  $obj->set("totallikes", $totalLike);
+  $obj->set("likes", $likes);
+  $obj->set("dislikes", $dislikes);
+  $obj->set("total_likes", $totalLikes);
 }
 
+##############################################################################
+sub afterRenameHandler {
+  my ($this, $oldWeb, $oldTopic, $oldAttachment, $newWeb, $newTopic, $newAttachment) = @_;
+
+  writeDebug("called afterRenameHandler($oldWeb, $oldTopic, $oldAttachment, $newWeb, $newTopic, $newAttachment)");
+
+  if ($oldAttachment && $newAttachment) {
+    writeDebug("rename attachment");
+    my $sth = $this->getStatementHandler("rename_meta");
+    $sth->execute(
+      $newAttachment, $newWeb, $newTopic,
+      $oldWeb, $oldTopic, "FILEATTACHMENT", $oldAttachment
+    );
+  } else {
+    my $sth = $this->getStatementHandler("rename_topic");
+    $sth->execute(
+        $newWeb, $newTopic, 
+        $oldWeb, $oldTopic
+    );
+  }
+}
 1;

@@ -1,31 +1,271 @@
-%META:TOPICINFO{author="ProjectContributor" date="1420222138" format="1.1" version="1"}%
+%META:TOPICINFO{author="ProjectContributor" comment="" date="1442237590" format="1.1"  version="1"}%
 ---+!! %TOPIC%
 %$SHORTDESCRIPTION%
 
 %TOC%
 
----++ Usage
+This plugin lets you vote on topics, attachments and comments by means of a like %JQICON{"thumb_up"}% or a dislike %JQICON{"thumb_down"}%.
+All "likes" are stored within Foswiki, that is: they are not stored with the help of an external social platform such as Facebook or the like.
+In fact, only then will this feature make sense on an intranet install where no external information is supposed to be leaked to the outside
+world for obvious reasons.
+
+Likes are used for social filtering, to
+
+   * list the most liked contributions on a frontpage (requires [[Foswiki:Extensions/DBCachePlugin][DBCachePlugin]]),
+   * influence the sorting order of search results (requires [[Foswiki:Extensions/SolrPlugin][SolrPlugin]]),
+   * vote on comments and optionally hide comments that fall below a lower threshold (requires [[Foswiki:Extensions/MetaCommentPlugin][MetaCommentPlugin]])
+   * vote on attachments (requires [[Foswiki:Extensions/TopicInteractionPlugin][TopicInteractionPlugin]]).
+
+Like buttons are highly customizable coming with a set of look and feels to match common css frameworks such as jquery-ui or flat design.
+
+In general, there are two different kinds of Likes
+
+   * youtube style: you may vote thumb up _and_ down
+   * facebook style: only positive likes are collected.
+
+Note that this plugin does _not_ implement a star rating. Use the social rating feature of [[Foswiki:Extensions/SocialFormfieldsPlugin][SocialFormfieldsPlugin]].
 
 ---++ Examples
+%IF{"not context LikePluginEnabled"
+  then="<div class='foswikiAlert'>(plugin not installed, output simulated)</div>"
+}%
+
+| *You type* | *You get* |
+| <verbatim class="tml">%LIKE{theme="simple"}%</verbatim>    | %IF{"context LikePluginEnabled" then="$percntLIKE{theme=\"simple\"}$percnt" else="<img src='%ATTACHURLPATH%/LikeSnap1.png' />" }% |
+| <verbatim class="tml">%LIKE{theme="default"}%</verbatim>   | %IF{"context LikePluginEnabled" then="$percntLIKE$percnt" else="<img src='%ATTACHURLPATH%/LikeSnap2.png' />"}% |
+| <verbatim class="tml">%LIKE{theme="lightgray"}%</verbatim> | %IF{"context LikePluginEnabled" then="$percntLIKE{theme=\"lightgray\"}$percnt" else="<img src='%ATTACHURLPATH%/LikeSnap3.png' />"}% |
+| <verbatim class="tml">%LIKE{theme="gray"}%</verbatim> | %IF{"context LikePluginEnabled" then="$percntLIKE{theme=\"gray\"}$percnt" else="<img src='%ATTACHURLPATH%/LikeSnap4.png' />"}% |
+| <verbatim class="tml">%LIKE{theme="black"}%</verbatim> | %IF{"context LikePluginEnabled" then="$percntLIKE{theme=\"black\"}$percnt" else="<img src='%ATTACHURLPATH%/LikeSnap5.png' />"}% |
+| <verbatim class="tml">%LIKE{theme="padding"}%</verbatim> | %IF{"context LikePluginEnabled" then="$percntLIKE{theme=\"padding\"}$percnt" else="<img src='%ATTACHURLPATH%/LikeSnap6.png' />"}% |
+| <verbatim class="tml">%LIKE{theme="ui"}%</verbatim> | %IF{"context LikePluginEnabled" then="$percntLIKE{theme=\"ui\"}$percnt" else="<img src='%ATTACHURLPATH%/LikeSnap7.png' />"}% |
+| <verbatim class="tml">%LIKE{theme="pattern"}%</verbatim> | %IF{"context LikePluginEnabled" then="$percntLIKE{theme=\"pattern\"}$percnt" else="<img src='%ATTACHURLPATH%/LikeSnap8.png' />"}% |
+| <verbatim class="tml">%LIKE{theme="flat"}%</verbatim> | %IF{"context LikePluginEnabled" then="$percntLIKE{theme=\"flat\"}$percnt" else="<img src='%ATTACHURLPATH%/LikeSnap9.png' />"}% |
+| <verbatim class="tml">%LIKE{
+    theme="simple"
+    showdislike="off"
+    showcount="off"
+    likelabel="Like"
+    likedlabel="Like"
+  }%</verbatim> | %IF{"context LikePluginEnabled"
+    then="$percntLIKE{
+            theme=\"simple\"
+            showdislike=\"off\"
+            showcount=\"off\"
+            likelabel=\"Like\"
+            likedlabel=\"Liked\"
+          }$percnt"
+    else="<img src='%ATTACHURLPATH%/LikeSnap15.png' />"
+  }% |
+| <verbatim class="tml">%LIKE{
+    theme="simple"
+    showlabel="off"
+  }%</verbatim> | %IF{"context LikePluginEnabled"
+    then="$percntLIKE{theme=\"simple\" showlabel=\"off\"}$percnt"
+    else="<img src='%ATTACHURLPATH%/LikeSnap10.png' />"
+  }%  |
+| <verbatim class="tml">%LIKE{
+    likeicon="heart"
+    showdislike="off"
+    likelabel="This was helpful"
+    likedlabel="I found this helpful"
+    theme="padding"
+  }%</verbatim> | %IF{"context LikePluginEnabled"
+    then="$percntLIKE{likeicon=\"heart\" showdislike=\"off\" likelabel=\"This was helpful\" likedlabel=\"I found this helpful\" theme=\"padding\"}$percnt"
+    else="<img src='%ATTACHURLPATH%/LikeSnap11.png' />"
+  }% |
+| <verbatim class="tml">%LIKE{
+    theme="simple"
+    showlabel="off"
+    likeicon="heart"
+    dislikeicon="cross"
+  }%</verbatim> | %IF{"context LikePluginEnabled"
+    then="$percntLIKE{showlabel=\"off\" likeicon=\"heart\" dislikeicon=\"cross\" theme=\"simple\"}$percnt"
+    else="<img src='%ATTACHURLPATH%/LikeSnap12.png' />"
+  }% |
+| <verbatim class="tml">%LIKE{
+    theme="ui"
+    likelabel="Agree"
+    likedlabel="Agreed"
+    dislikelabel=""
+  }%</verbatim> | %IF{"context LikePluginEnabled"
+    then="$percntLIKE{theme=\"ui\" dislikelabel=\"\" likelabel=\"Agree\" likedlabel=\"Agreed\"}$percnt"
+    else="<img src='%ATTACHURLPATH%/LikeSnap13.png' />"
+  }% |
+| <verbatim class="tml">%LIKE{
+    theme="ui"
+    showlabel="off"
+  }%</verbatim> | %IF{"context LikePluginEnabled"
+    then="$percntLIKE{theme=\"ui\" showlabel=\"off\"}$percnt"
+    else="<img src='%ATTACHURLPATH%/LikeSnap14.png' />"
+  }% |
+
+---++ Syntax
+
+Here's the full syntax of all options of the =%LIKE= macro.
+
+<div class="overflow">
+| *Parameter* | *Description* | *Default* |
+| topic | topic to vote on | current topic |
+| type | meta data to vote on as stored in =topic=; refers to the topic itself if left empty; other sensible values are =COMMENT=, =FILEATTACHMENT=, etc |  |
+| id | name of the meta data to vote on, e.g. the name of an attachment or the id of a comment; this setting is only used when =type= is set as well | |
+| theme | one of =black=, =default=, =flat=, =gray=, =lightgray=, =padding=, =pattern=, =simple=, =ui= | =default= |
+| class | an arbitrary css class to be added to the widget | |
+| likeformat | format for the like button | <verbatim class="tml"><div class='jqLikeButton %buttonClass% %likeSelected%'>
+  <span class='jqLikeButtonText %buttonText%'>
+    <a href='#' title='%MAKETEXT{\"Click to vote\"}%'>
+      %likeIcon%%thisLikeLabel%
+    </a>%count%
+  </span>
+</div></verbatim> |
+| likelabel | label to be used in =likeformat= | <verbatim class="tml">%MAKETEXT{"I like this"}%</verbatim> |
+| likedlabel | label to be used in =likeformat= when the current user has liked the specified object | same as =likelabel= |
+| likeicon | icon to be used in =likeformat=; this can be any of the icons accessible via %SYSTEMWEB%.VarJQICON, i.g. any famfamfam or fontawesome icons | =fa-thumbs-up= |
+| dislikeformat | format string for the dislike button | <verbatim class="tml"><div class='jqDislikeButton %buttonClass% %dislikeSelected%'>
+  <span class='jqLikeButtonText %buttonText%'>
+    <a href='#' title='%MAKETEXT{\"Click to vote\"}%'>
+      %dislikeIcon%%thisDislikeLabel%
+    </a>%count%
+  </span>
+</div></verbatim> |
+| dislikelabel | label to be used in =dislikeformat= | <verbatim class="tml">%MAKETEXT{"I don&#39;t like this"}%</verbatim> |
+| dislikedlabel | label to be used in =dislikeformat= when the current user has disliked the specified object | same as =dislikedlabel= |
+| dislikeicon | icon to be used in =dislikeformat=; this can be any of the icons accessible via %SYSTEMWEB%.VarJQICON, i.g. any famfamfam or fontawesome icons | =fa-thumbs-down= |
+| editable | boolean flag to indicate whether the user may like or the widget is in read-only mode | controlled by authentication (only logged-in users are allowed to vote) |
+| header | header string to be prepended to the widget | |
+| format | format string for the overall widget containing both, the like and the dislike button | <verbatim class="tml"><div class='jqLike %class% %wrapperClass% %editable%' %params%>
+    %like%%dislike%
+  </div></verbatim> |
+| footer | footer string to be appended to the widget | |
+| showcount | boolean flag to show/hide counters | on |
+| showdislike | boolean flag to enable/disable disliking | on |
+| showlabel | boolean flag to show/hide button labels | on |
+| showicon | boolean flag to show/hide icons | on |
+| hidenull | boolean flag to hide the widget when no votes have been made yet | off |
+</div>
+
+The =format=, =likeformat= and =dislikeformat= parameters may come with a set of variables to display current values as follows:
+
+| *Variable* | *Description* |
+| =%like%= | used in =format= to insert the result of =likeformat= |
+| =%dislike%= | used in =format= to insert the result of =dislikeformat= |
+| =%params%= | used in =format= to insert the html5 data attributes for the jquery like plugin |
+| =%likeLabel%=,  =%likedLabel%=,  =%dislikeLabel%=, =%dislikedLabel%= | labels of the  like/dislike buttons |
+| =%thisLikeLabel%=    | _current_ value to be used; this is either the =likelabel= or the =likedlabel= of the current state |
+| =%thisDislikeLabel%= | _current_ value to be used; this is either the =dislikelabel= or the =dislikedlabel= of the current state |
+| =%likeIcon%=, =%dislikeIcon%= | value of =likeicon= and =dislikeicon= |
+| =%likeCount%=, =%dislikeCount%=, =%totalLikeCount%= | current counts of votes done by all users |
+| =%likeSelected%=, =%dislikeSelected%= | either empty or the string "selected" depending on the state of the button |
+| =%editable%= | either the string "editable" or empty depending on the mode of the widget |
+| =%web%= | web of the current object being voted on |
+| =%topic%= | topic of the current object being voted on |
+| =%metaType%= | meta type |
+| =%metaId%=| meta id |
+| =%class%= | the custom class string |
+
+---++ Perl API
+
+The plugin a registration handler that other plugins may contact in order to be notified whenever a user liked an object.
+
+---+++ registerAfterLikeHandler()
+
+Example:
+
+<verbatim class="perl">
+use Foswiki::Plugins::LikePlugin();
+
+Foswiki::LikePlugin::registerAfterLikeHandler(sub {
+  my ($web, $topic, $type, $id, $user, $likes, $dislikes) = @_;
+
+});
+</verbatim>
+
+For example [[Foswiki:Extensions/MetaCommentPlugin][MetaCommentPlugin]] updates the META:COMMENT data to cache like and dislike counts
+as part of the meta data to be able to seamlessly sort and hide comments based on likes.
+
+---+++ getCore()
+
+This function offers access to the core singleton object responsible for like/dislike services.
+
+Example:
+
+<verbatim class="perl">
+use Foswiki::Plugins::LikePlugin();
+
+my $likeCore = Foswiki::Plugins::LikePlugin::getCore();
+my ($likes, $dislikes) = $likeCore->getLikes($web, $topic, $type, $id);
+my ($myLikes, $myDislikes) = $likeCore->getLikesOfUser($web, $topic, $type, $id, $wikiName);
+</verbatim>
+
+---++ !JavaScript API
+
+Each =%LIKE= macro will be powered by a piece of jQuery to communicate with the backend counting likes and dislikes. This is done using
+a =vote= JSON-RPC handler that takes the following parameters:
+
+| *Parameter* | *Description* |
+| web, topic | address of the object to be liked |
+| type | meta data type, e.g. COMMENT or FILEATTACHMENT |
+| id | name of the meta data to be voted on |
+| username | username that the vote is counted for (only for testing and admins) |
+| like | the vote; possible values are 0 or 1 |
+| dislike | the vote; possible values are 0 or 1 |
+
+A =change.likes= event is emitted Whenever a user votes. This allows you to listen to a =%LIKE= widget and be notified on any vote event.
+All =%LIKE= widgets on the same page are listening on this =change.likes= event and update themselves whenever another widget for the
+same object has been updated. You may notice that when installing this plugin and testing the above examples that clicking on one button
+will update all others simultaneously as long as they refer to the same object being voted on.
 
 ---++ Installation Instructions
 
 %$INSTALL_INSTRUCTIONS%
+
+Note that you will need a database driver for the DBI interface used to store values into an SQL database backend. By default SQLite is used.
+
+---++ Skin integration
+
+---+++ !NatSkin
+LikePlugin is well integrated into [[Foswiki:Extensions/NatSkin][NatSkin]] so that no further customizations are required. Topics are
+like-enabled by displaying a "thumb-up" as part of the topic actions. You may further customize the location of the like button in the !SiteTopicActions
+web component.
+
+---+++ !PatternSkin
+To enable topic-voting add the =like= identifier to the =SKIN= setting, e.g.
+
+<verbatim>   * Set SKIN = like, natedit, pattern</verbatim>
+
+In case you've got [[Foswiki:Extensions/BreadcrumbsPlugin][BreadcrumbsPlugin]], [[Foswiki:Extensions/TopicInteractionPlugin][TopicInteractionPlugin]] and/or [[Foswiki:Extensions/SolrPlugin][SolrPlugin]]
+then use
+
+<verbatim>   * Set SKIN = like, breadcrumbs, solr, topicinteraction, natedit, pattern</verbatim>
 
 ---++ Dependencies
 %$DEPENDENCIES%
 
 ---++ Change History
 
-| | |
+%TABLE{columnwidths="7em" tablewidth="100%"}%
+| 21 Sep 2015 | initial release |
 
 %META:FORM{name="PackageForm"}%
 %META:FIELD{name="Author" title="Author" value="Michael Daum"}%
-%META:FIELD{name="Version" title="Version" value="%$VERSION%"}%
-%META:FIELD{name="Release" title="Release" value="%$RELEASE%"}%
+%META:FIELD{name="Version" title="Version" value="%25$VERSION%25"}%
+%META:FIELD{name="Release" title="Release" value="%25$RELEASE%25"}%
 %META:FIELD{name="Copyright" value="2015 Michael Daum http://michaeldaumconsulting.com"}%
 %META:FIELD{name="License" value="GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]])"}%
-%META:FIELD{name="Repository" value="https://github.com/foswiki/%$ROOTMODULE%"}%
-%META:FIELD{name="Home" value="http://foswiki.org/Extensions/%$ROOTMODULE%"}%
-%META:FIELD{name="Support" value="http://foswiki.org/Support/%$ROOTMODULE%"}%
-%META:FIELD{name="Repository" title="Repository" value="https://github.com/foswiki/%$ROOTMODULE%"}%
+%META:FIELD{name="Repository" title="Repository" value="https://github.com/foswiki/%25$ROOTMODULE%25"}%
+%META:FIELD{name="Home" value="http://foswiki.org/Extensions/%25$ROOTMODULE%25"}%
+%META:FIELD{name="Support" value="http://foswiki.org/Support/%25$ROOTMODULE%25"}%
+%META:FILEATTACHMENT{name="LikeSnap15.png" attachment="LikeSnap15.png" attr="" comment="" date="1442237590" size="906" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap14.png" attachment="LikeSnap14.png" attr="" comment="" date="1442237590" size="1563" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap13.png" attachment="LikeSnap13.png" attr="" comment="" date="1442237590" size="2416" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap12.png" attachment="LikeSnap12.png" attr="" comment="" date="1442237590" size="1461" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap11.png" attachment="LikeSnap11.png" attr="" comment="" date="1442237590" size="2495" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap10.png" attachment="LikeSnap10.png" attr="" comment="" date="1442237590" size="900" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap9.png" attachment="LikeSnap9.png" attr="" comment="" date="1442237590" size="3215" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap8.png" attachment="LikeSnap8.png" attr="" comment="" date="1442237590" size="4190" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap7.png" attachment="LikeSnap7.png" attr="" comment="" date="1442237590" size="4078" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap6.png" attachment="LikeSnap6.png" attr="" comment="" date="1442237590" size="3024" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap5.png" attachment="LikeSnap5.png" attr="" comment="" date="1442237590" size="2750" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap4.png" attachment="LikeSnap4.png" attr="" comment="" date="1442237590" size="2792" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap3.png" attachment="LikeSnap3.png" attr="" comment="" date="1442237590" size="2887" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap2.png" attachment="LikeSnap2.png" attr="" comment="" date="1442237590" size="2911" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap1.png" attachment="LikeSnap1.png" attr="" comment="" date="1442237590" size="2704" user="ProjectContributor" version="1"}%
