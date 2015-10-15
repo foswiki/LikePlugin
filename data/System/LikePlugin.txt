@@ -1,6 +1,6 @@
-%META:TOPICINFO{author="ProjectContributor" comment="" date="1442237590" format="1.1"  version="1"}%
+%META:TOPICINFO{author="ProjectContributor" date="1444891178" format="1.1" version="1"}%
 ---+!! %TOPIC%
-%$SHORTDESCRIPTION%
+%FORMFIELD{"Description"}%
 
 %TOC%
 
@@ -215,7 +215,6 @@ same object has been updated. You may notice that when installing this plugin an
 will update all others simultaneously as long as they refer to the same object being voted on.
 
 ---++ Installation Instructions
-
 %$INSTALL_INSTRUCTIONS%
 
 Note that you will need a database driver for the DBI interface used to store values into an SQL database backend. By default SQLite is used.
@@ -243,29 +242,31 @@ then use
 ---++ Change History
 
 %TABLE{columnwidths="7em" tablewidth="100%"}%
+| 15 Oct 2015 | normalize web before putting it into an sql query ... fixes counts in subwebs |
 | 21 Sep 2015 | initial release |
 
+%META:FILEATTACHMENT{name="LikeSnap15.png" attr="" comment="" date="1444891178" size="906" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap14.png" attr="" comment="" date="1444891178" size="1563" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap13.png" attr="" comment="" date="1444891178" size="2416" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap12.png" attr="" comment="" date="1444891178" size="1461" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap11.png" attr="" comment="" date="1444891178" size="2495" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap10.png" attr="" comment="" date="1444891178" size="900" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap9.png" attr="" comment="" date="1444891178" size="3215" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap8.png" attr="" comment="" date="1444891178" size="4190" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap7.png" attr="" comment="" date="1444891178" size="4078" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap6.png" attr="" comment="" date="1444891178" size="3024" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap5.png" attr="" comment="" date="1444891178" size="2750" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap4.png" attr="" comment="" date="1444891178" size="2792" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap3.png" attr="" comment="" date="1444891178" size="2887" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap2.png" attr="" comment="" date="1444891178" size="2911" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap1.png" attr="" comment="" date="1444891178" size="2704" user="ProjectContributor" version="1"}%
 %META:FORM{name="PackageForm"}%
 %META:FIELD{name="Author" title="Author" value="Michael Daum"}%
-%META:FIELD{name="Version" title="Version" value="%25$VERSION%25"}%
+%META:FIELD{name="Copyright" title="Copyright" value="2015 Michael Daum http://michaeldaumconsulting.com"}%
+%META:FIELD{name="Description" title="Description" value="%25$SHORTDESCRIPTION%25"}%
+%META:FIELD{name="Home" title="Home" value="http://foswiki.org/Extensions/%25$ROOTMODULE%25"}%
+%META:FIELD{name="License" title="License" value="GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]])"}%
 %META:FIELD{name="Release" title="Release" value="%25$RELEASE%25"}%
-%META:FIELD{name="Copyright" value="2015 Michael Daum http://michaeldaumconsulting.com"}%
-%META:FIELD{name="License" value="GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]])"}%
 %META:FIELD{name="Repository" title="Repository" value="https://github.com/foswiki/%25$ROOTMODULE%25"}%
-%META:FIELD{name="Home" value="http://foswiki.org/Extensions/%25$ROOTMODULE%25"}%
-%META:FIELD{name="Support" value="http://foswiki.org/Support/%25$ROOTMODULE%25"}%
-%META:FILEATTACHMENT{name="LikeSnap15.png" attachment="LikeSnap15.png" attr="" comment="" date="1442237590" size="906" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap14.png" attachment="LikeSnap14.png" attr="" comment="" date="1442237590" size="1563" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap13.png" attachment="LikeSnap13.png" attr="" comment="" date="1442237590" size="2416" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap12.png" attachment="LikeSnap12.png" attr="" comment="" date="1442237590" size="1461" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap11.png" attachment="LikeSnap11.png" attr="" comment="" date="1442237590" size="2495" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap10.png" attachment="LikeSnap10.png" attr="" comment="" date="1442237590" size="900" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap9.png" attachment="LikeSnap9.png" attr="" comment="" date="1442237590" size="3215" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap8.png" attachment="LikeSnap8.png" attr="" comment="" date="1442237590" size="4190" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap7.png" attachment="LikeSnap7.png" attr="" comment="" date="1442237590" size="4078" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap6.png" attachment="LikeSnap6.png" attr="" comment="" date="1442237590" size="3024" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap5.png" attachment="LikeSnap5.png" attr="" comment="" date="1442237590" size="2750" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap4.png" attachment="LikeSnap4.png" attr="" comment="" date="1442237590" size="2792" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap3.png" attachment="LikeSnap3.png" attr="" comment="" date="1442237590" size="2887" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap2.png" attachment="LikeSnap2.png" attr="" comment="" date="1442237590" size="2911" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap1.png" attachment="LikeSnap1.png" attr="" comment="" date="1442237590" size="2704" user="ProjectContributor" version="1"}%
+%META:FIELD{name="Support" title="Support" value="http://foswiki.org/Support/%25$ROOTMODULE%25"}%
+%META:FIELD{name="Version" title="Version" value="%25$VERSION%25"}%

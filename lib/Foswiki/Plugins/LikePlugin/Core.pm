@@ -190,7 +190,6 @@ HERE
   return $this->{dbh};
 }
 
-
 ###############################################################################
 sub getStatementHandler {
   my ($this, $id) = @_;
@@ -292,10 +291,10 @@ sub LIKE {
   push @html5Params, "data-topic='$theTopic'";
   push @html5Params, "data-meta-type='$metaType'" if $metaType;
   push @html5Params, "data-meta-id='$metaId'" if $metaId;
-  push @html5Params, "data-like-label='%ENCODE{$likeLabel}%'" if $likeLabel;
-  push @html5Params, "data-liked-label='%ENCODE{$likedLabel}%'" if $likedLabel;
-  push @html5Params, "data-dislike-label='%ENCODE{$dislikeLabel}%'" if $dislikeLabel;
-  push @html5Params, "data-disliked-label='%ENCODE{$dislikedLabel}%'" if $dislikedLabel;
+  push @html5Params, "data-like-label='".urlEncode($likeLabel)."'" if $likeLabel;
+  push @html5Params, "data-liked-label='".urlEncode($likedLabel)."'" if $likedLabel;
+  push @html5Params, "data-dislike-label='".urlEncode($dislikeLabel)."'" if $dislikeLabel;
+  push @html5Params, "data-disliked-label='".urlEncode($dislikedLabel)."'" if $dislikedLabel;
   push @html5Params, "data-likes='$likeCount'";
   push @html5Params, "data-dislikes='$dislikeCount'";
   push @html5Params, "data-selected-class='%selectionClass%'";
@@ -345,6 +344,15 @@ sub LIKE {
   Foswiki::Plugins::JQueryPlugin::createPlugin("like");
 
   return Foswiki::Func::decodeFormatTokens($header.$result.$footer);
+}
+
+###############################################################################
+sub urlEncode {
+  my $text = shift;
+
+  $text =~ s{([^0-9a-zA-Z-_.:~!*#/])}{sprintf('%%%02x',ord($1))}ge;
+
+  return $text;
 }
 
 ###############################################################################
@@ -457,6 +465,7 @@ sub getLikes {
 
   $type ||= '';
   $id ||= '';
+  $web =~ s/\//./g;
 
   my $sth = $this->getStatementHandler("select_likes");
   my ($like, $dislike) = $this->{dbh}->selectrow_array($sth, undef, $web, $topic, $type, $id);
@@ -474,6 +483,7 @@ sub getLikeOfUser {
   $type ||= '';
   $id ||= '';
   $wikiName ||= Foswiki::Func::getWikiName();
+  $web =~ s/\//./g;
 
   my $sth = $this->getStatementHandler("select_like_of_user");
   my ($likes, $dislikes) = $this->{dbh}->selectrow_array($sth, undef, $web, $topic, $type, $id, $wikiName);
@@ -487,6 +497,8 @@ sub getLikeOfUser {
 ##############################################################################
 sub solrIndexTopicHandler {
   my ($this, $indexer, $doc, $web, $topic, $meta, $text) = @_;
+
+  $web =~ s/\//./g;
 
   my $sth = $this->getStatementHandler("select_likes");
   my ($likes, $dislikes, $totalLikes) = $this->{dbh}->selectrow_array($sth, undef, $web, $topic, "", "");
@@ -508,6 +520,8 @@ sub solrIndexTopicHandler {
 sub dbcacheIndexTopicHandler {
   my ($this, $db, $obj, $web, $topic, $meta, $text) = @_;
 
+  $web =~ s/\//./g;
+
   my $sth = $this->getStatementHandler("select_likes");
   my ($likes, $dislikes, $totalLikes) = $this->{dbh}->selectrow_array($sth, undef, $web, $topic, "", "");
 
@@ -515,7 +529,7 @@ sub dbcacheIndexTopicHandler {
   $dislikes ||= 0;
   $totalLikes ||= 0;
 
-  #print STDERR "like=$likes, dislike=$dislikes, totalLike=$totalLikes\n";
+  #print STDERR "web=$web, topic=$topic, like=$likes, dislike=$dislikes, totalLike=$totalLikes\n";
 
   $obj->set("likes", $likes);
   $obj->set("dislikes", $dislikes);

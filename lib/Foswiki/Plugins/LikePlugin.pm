@@ -22,8 +22,8 @@ use Foswiki::Func ();
 use Foswiki::Plugins::JQueryPlugin ();
 use Foswiki::Contrib::JsonRpcContrib ();
 
-our $VERSION = '1.00';
-our $RELEASE = '21 Sep 2015';
+our $VERSION = '1.01';
+our $RELEASE = '15 Oct 2015';
 our $SHORTDESCRIPTION = 'Like-style voting for content';
 our $NO_PREFS_IN_TOPIC = 1;
 our $core;
