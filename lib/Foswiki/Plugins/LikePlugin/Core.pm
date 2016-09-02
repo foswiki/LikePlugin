@@ -1,6 +1,6 @@
 # Plugin for Foswiki - The Free and Open Source Wiki, http://foswiki.org/
 #
-# LikePlugin is Copyright (C) 2015 Michael Daum http://michaeldaumconsulting.com
+# LikePlugin is Copyright (C) 2015-2016 Michael Daum http://michaeldaumconsulting.com
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -21,6 +21,7 @@ use warnings;
 use Foswiki::Plugins::LikePlugin ();
 use Foswiki::Func ();
 use Error qw(:try);
+use Encode ();
 use DBI ();
 
 use constant TRACE => 0; # toggle me
@@ -240,7 +241,7 @@ sub LIKE {
   my $showCount = Foswiki::Func::isTrue($params->{showcount}, 1);
   my $countFormat = $showCount?"<span class='jqLikeCount %counterClass%'>%num%</span>":"";
 
-  my $tooltip = $params->{tooltip} // '%MAKETEXT{"Click to vote"}%';
+  my $tooltip = $params->{tooltip} // $session->i18n->maketext("Click to vote");
   $tooltip = $editable?"title='$tooltip'":"";
 
   my $likeFormat = $params->{likeformat} // "<div class='jqLikeButton %buttonClass% %likeSelected%'><span class='jqLikeButtonText %buttonText%'><a href='#' %tooltip%>%likeIcon%%thisLikeLabel%</a>%count%</span></div>";
@@ -254,15 +255,15 @@ sub LIKE {
   $dislikeFormat =~ s/%num%/%dislikeCount%/g;
   $dislikeFormat =~ s/%tooltip%/$tooltip/g;
 
-  my $likeLabel = $params->{likelabel} // '%MAKETEXT{"I like this"}%';
+  my $likeLabel = $params->{likelabel} // $session->i18n->maketext("I like this");
   my $likedLabel = $params->{likedlabel} // $likeLabel;
   my $thisLikeLabel = $myLike > 0?$likedLabel:$likeLabel;
   $thisLikeLabel = $thisLikeLabel?"<span class='jqLikeLabel'>$thisLikeLabel</span>":"";
 
-  my $dislikeLabel = $params->{dislikelabel} // '%MAKETEXT{"I don&#39;t like this"}%';
-  my $dislikedLabel = $params->{dislikelabel} // $dislikeLabel;
+  my $dislikeLabel = $showDislike?$params->{dislikelabel} // $session->i18n->maketext("I don&#39;t like this"):"";
+  my $dislikedLabel = $showDislike?$params->{dislikelabel} // $dislikeLabel:"";
   my $thisDislikeLabel = $myDislike > 0?$dislikedLabel:$dislikeLabel;
-  $thisDislikeLabel = $thisDislikeLabel?"<span class='jqLikeLabel'>$thisDislikeLabel</span>":"";
+  $thisDislikeLabel = $showDislike?($thisDislikeLabel?"<span class='jqLikeLabel'>$thisDislikeLabel</span>":""):"";
 
   my $showLabel = Foswiki::Func::isTrue($params->{showlabel}, 1);
   unless ($showLabel) {
@@ -330,7 +331,7 @@ sub LIKE {
 
   my $theme = $this->getTheme($params->{"theme"});
   foreach my $key (qw(wrapperClass buttonClass buttonText iconClass counterClass selectionClass)) {
-    my $val = $theme->{$key} || '';
+    my $val = $params->{lc($key)} || $theme->{$key} || '';
     $result =~ s/%$key%/$val/g;
   }
 
@@ -350,6 +351,7 @@ sub LIKE {
 sub urlEncode {
   my $text = shift;
 
+  $text = Encode::encode($Foswiki::cfg{Site}{CharSet}, $text);
   $text =~ s{([^0-9a-zA-Z-_.:~!*#/])}{sprintf('%%%02x',ord($1))}ge;
 
   return $text;
@@ -400,11 +402,28 @@ sub jsonRpcVote {
     dislike => $dislike,
   });
 
-  # trigger solr indexer
-  if ($Foswiki::cfg{Plugins}{SolrPlugin}{Enabled}) {
-    require Foswiki::Plugins::SolrPlugin;
-    my $indexer = Foswiki::Plugins::SolrPlugin::getIndexer();
-    $indexer->indexTopic($web, $topic);
+  # trigger event
+  if ($Foswiki::cfg{Plugins}{WebSocketPlugin}{Enabled}) {
+    require Foswiki::Plugins::WebSocketPlugin;
+    my $pubSub = Foswiki::Plugins::WebSocketPlugin::getPubSub();
+
+    $pubSub->publish("_global", {
+      type => "save",
+      data => {
+        user => Foswiki::Func::getWikiName(),
+        web => $web,
+        topic => $topic,
+      }
+    });
+
+  } else {
+  
+    # trigger solr indexer ourselves
+    if ($Foswiki::cfg{Plugins}{SolrPlugin}{Enabled}) {
+      require Foswiki::Plugins::SolrPlugin;
+      my $indexer = Foswiki::Plugins::SolrPlugin::getIndexer();
+      $indexer->indexTopic($web, $topic);
+    }
   }
 
   # trigger dbcache indexer

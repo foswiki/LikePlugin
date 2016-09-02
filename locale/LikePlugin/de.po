@@ -19,7 +19,7 @@ msgstr ""
 
 #: lib/Foswiki/Plugins/LikePlugin/Core.pm:244
 msgid "Click to vote"
-msgstr "Klicken, um zu wählen"
+msgstr "Klicken Sie, um zu bewerten"
 
 #: data/System/LikePlugin.txt:130 lib/Foswiki/Plugins/LikePlugin/Core.pm:263
 msgid "I don&#39;t like this"

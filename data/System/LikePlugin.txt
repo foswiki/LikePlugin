@@ -1,4 +1,4 @@
-%META:TOPICINFO{author="ProjectContributor" date="1444891178" format="1.1" version="1"}%
+%META:TOPICINFO{author="micha" comment="reprev" date="1445018242" format="1.1" reprev="8" version="8"}%
 ---+!! %TOPIC%
 %FORMFIELD{"Description"}%
 
@@ -44,15 +44,17 @@ Note that this plugin does _not_ implement a star rating. Use the social rating 
     theme="simple"
     showdislike="off"
     showcount="off"
+    likeicon="fa-thumbs-o-up fa-flip-horizontal fa-lg"
     likelabel="Like"
-    likedlabel="Like"
+    likedlabel="Liked"
   }%</verbatim> | %IF{"context LikePluginEnabled"
     then="$percntLIKE{
             theme=\"simple\"
             showdislike=\"off\"
             showcount=\"off\"
-            likelabel=\"Like\"
-            likedlabel=\"Liked\"
+            likeicon=\"fa-thumbs-o-up fa-flip-horizontal fa-lg\"
+            likelabel=\" Like\"
+            likedlabel=\" Liked\"
           }$percnt"
     else="<img src='%ATTACHURLPATH%/LikeSnap15.png' />"
   }% |
@@ -242,9 +244,20 @@ then use
 ---++ Change History
 
 %TABLE{columnwidths="7em" tablewidth="100%"}%
+| 02 Sep 2016 | add support for fontawesome icon; initial support for <nop>WebSocketPlugin |
 | 15 Oct 2015 | normalize web before putting it into an sql query ... fixes counts in subwebs |
 | 21 Sep 2015 | initial release |
 
+%META:FORM{name="PackageForm"}%
+%META:FIELD{name="Author" title="Author" value="Michael Daum"}%
+%META:FIELD{name="Version" title="Version" value="%25$VERSION%25"}%
+%META:FIELD{name="Release" title="Release" value="%25$RELEASE%25"}%
+%META:FIELD{name="Description" title="Description" value="%25$SHORTDESCRIPTION%25"}%
+%META:FIELD{name="Repository" title="Repository" value="https://github.com/foswiki/%25$ROOTMODULE%25"}%
+%META:FIELD{name="Copyright" title="Copyright" value="2015-2016 Michael Daum http://michaeldaumconsulting.com"}%
+%META:FIELD{name="License" title="License" value="GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]])"}%
+%META:FIELD{name="Home" title="Home" value="https://foswiki.org/Extensions/%25$ROOTMODULE%25"}%
+%META:FIELD{name="Support" title="Support" value="https://foswiki.org/Support/%25$ROOTMODULE%25"}%
 %META:FILEATTACHMENT{name="LikeSnap15.png" attr="" comment="" date="1444891178" size="906" user="ProjectContributor" version="1"}%
 %META:FILEATTACHMENT{name="LikeSnap14.png" attr="" comment="" date="1444891178" size="1563" user="ProjectContributor" version="1"}%
 %META:FILEATTACHMENT{name="LikeSnap13.png" attr="" comment="" date="1444891178" size="2416" user="ProjectContributor" version="1"}%
@@ -260,13 +273,3 @@ then use
 %META:FILEATTACHMENT{name="LikeSnap3.png" attr="" comment="" date="1444891178" size="2887" user="ProjectContributor" version="1"}%
 %META:FILEATTACHMENT{name="LikeSnap2.png" attr="" comment="" date="1444891178" size="2911" user="ProjectContributor" version="1"}%
 %META:FILEATTACHMENT{name="LikeSnap1.png" attr="" comment="" date="1444891178" size="2704" user="ProjectContributor" version="1"}%
-%META:FORM{name="PackageForm"}%
-%META:FIELD{name="Author" title="Author" value="Michael Daum"}%
-%META:FIELD{name="Copyright" title="Copyright" value="2015 Michael Daum http://michaeldaumconsulting.com"}%
-%META:FIELD{name="Description" title="Description" value="%25$SHORTDESCRIPTION%25"}%
-%META:FIELD{name="Home" title="Home" value="http://foswiki.org/Extensions/%25$ROOTMODULE%25"}%
-%META:FIELD{name="License" title="License" value="GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]])"}%
-%META:FIELD{name="Release" title="Release" value="%25$RELEASE%25"}%
-%META:FIELD{name="Repository" title="Repository" value="https://github.com/foswiki/%25$ROOTMODULE%25"}%
-%META:FIELD{name="Support" title="Support" value="http://foswiki.org/Support/%25$ROOTMODULE%25"}%
-%META:FIELD{name="Version" title="Version" value="%25$VERSION%25"}%
