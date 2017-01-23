@@ -419,7 +419,7 @@ sub jsonRpcVote {
   } else {
   
     # trigger solr indexer ourselves
-    if ($Foswiki::cfg{Plugins}{SolrPlugin}{Enabled}) {
+    if ($Foswiki::cfg{Plugins}{SolrPlugin} && $Foswiki::cfg{Plugins}{SolrPlugin}{Enabled}) {
       require Foswiki::Plugins::SolrPlugin;
       my $indexer = Foswiki::Plugins::SolrPlugin::getIndexer();
       $indexer->indexTopic($web, $topic);

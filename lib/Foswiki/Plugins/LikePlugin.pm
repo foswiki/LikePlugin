@@ -22,7 +22,7 @@ use Foswiki::Func ();
 use Foswiki::Plugins::JQueryPlugin ();
 use Foswiki::Contrib::JsonRpcContrib ();
 
-our $VERSION = '2.00';
+our $VERSION = '2.01';
 our $RELEASE = '02 Sep 2016';
 our $SHORTDESCRIPTION = 'Like-style voting for content';
 our $NO_PREFS_IN_TOPIC = 1;
@@ -37,7 +37,7 @@ sub initPlugin {
     return getCore()->jsonRpcVote(@_);
   });
 
-  if ($Foswiki::cfg{Plugins}{SolrPlugin}{Enabled}) {
+  if ($Foswiki::cfg{Plugins}{SolrPlugin} && $Foswiki::cfg{Plugins}{SolrPlugin}{Enabled}) {
     require Foswiki::Plugins::SolrPlugin;
     Foswiki::Plugins::SolrPlugin::registerIndexTopicHandler(sub {
       return getCore()->solrIndexTopicHandler(@_);
