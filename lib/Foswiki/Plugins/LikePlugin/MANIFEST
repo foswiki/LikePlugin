@@ -1,3 +1,4 @@
+!noci
 data/System/LikePlugin.txt 0644
 lib/Foswiki/Plugins/LikePlugin/Core.pm 0644
 lib/Foswiki/Plugins/LikePlugin/DEPENDENCIES 0644

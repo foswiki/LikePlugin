@@ -1,6 +1,6 @@
 # Plugin for Foswiki - The Free and Open Source Wiki, http://foswiki.org/
 #
-# LikePlugin is Copyright (C) 2015-2016 Michael Daum http://michaeldaumconsulting.com
+# LikePlugin is Copyright (C) 2015-2019 Michael Daum http://michaeldaumconsulting.com
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -278,8 +278,11 @@ sub LIKE {
   my $likeIcon = $params->{likeicon} // 'fa-thumbs-up';
   my $dislikeIcon = $params->{dislikeicon} // 'fa-thumbs-down';
 
-  $likeIcon = $likeIcon?"%JQICON{\"$likeIcon\" class=\"%iconClass%\"}%":"";
-  $dislikeIcon = $dislikeIcon?"%JQICON{\"$dislikeIcon\" class=\"%iconClass%\"}%":"";
+  my $likeIconFormat = $params->{likeiconformat} // "%JQICON{\"$likeIcon\" class=\"%iconClass%\"}%";
+  $likeIcon = $likeIcon?$likeIconFormat:"";
+
+  my $dislikeIconFormat = $params->{dislikeiconformat} // "%JQICON{\"$dislikeIcon\" class=\"%iconClass%\"}%";
+  $dislikeIcon = $dislikeIcon?$dislikeIconFormat:"";
 
   my $showIcon = Foswiki::Func::isTrue($params->{showicon}, 1);
   unless ($showIcon) {

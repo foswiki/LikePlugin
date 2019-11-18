@@ -1,3 +1,4 @@
+*.jslint
 *.swp
 *,v
 *.gz
@@ -12,3 +13,4 @@ pub/System/LikePlugin/like.js
 /LikePlugin.tgz
 /LikePlugin.txt
 /LikePlugin.zip
+locale/**/*.mo

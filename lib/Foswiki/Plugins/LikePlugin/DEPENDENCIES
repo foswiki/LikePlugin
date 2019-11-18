@@ -1,5 +1,5 @@
 DBI,>=1.0,cpan,Required
-DBD::SQLite,>=3.0,cpan,Recommended.
+DBD::SQLite,>=1.54,cpan,Recommended.
 Foswiki::Plugins::JQueryPlugin,>=6.00,perl,Required
 Foswiki::Contrib::JsonRpcContrib,>=2.21,perl,Required
 Foswiki::Plugins::DBCachePlugin,>=8.10,perl,Optional

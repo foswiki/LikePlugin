@@ -122,6 +122,8 @@ Here's the full syntax of all options of the =%LIKE= macro.
 | likelabel | label to be used in =likeformat= | <verbatim class="tml">%MAKETEXT{"I like this"}%</verbatim> |
 | likedlabel | label to be used in =likeformat= when the current user has liked the specified object | same as =likelabel= |
 | likeicon | icon to be used in =likeformat=; this can be any of the icons accessible via %SYSTEMWEB%.VarJQICON, i.g. any famfamfam or fontawesome icons | =fa-thumbs-up= |
+| likeiconformat | format string to render teh like icon | <verbatim class="tml">%JQICON{\"$likeIcon\" class=\"%iconClass%\"}%</verbatim> |
+| dislikeiconformat | format string to render the dislike icon | <verbatim class="tml">%JQICON{\"$dislikeIcon\" class=\"%iconClass%\"}%</verbatim> |
 | dislikeformat | format string for the dislike button | <verbatim class="tml"><div class='jqDislikeButton %buttonClass% %dislikeSelected%'>
   <span class='jqLikeButtonText %buttonText%'>
     <a href='#' title='%MAKETEXT{\"Click to vote\"}%'>
@@ -244,9 +246,10 @@ then use
 ---++ Change History
 
 %TABLE{columnwidths="7em" tablewidth="100%"}%
-| 02 Sep 2016 | add support for fontawesome icon; initial support for <nop>WebSocketPlugin |
-| 15 Oct 2015 | normalize web before putting it into an sql query ... fixes counts in subwebs |
-| 21 Sep 2015 | initial release |
+|  18 Nov 2019 | added likeiconformat and dislikeiconformat paramerters |
+|  02 Sep 2016 | add support for fontawesome icon; initial support for <nop>WebSocketPlugin |
+|  15 Oct 2015 | normalize web before putting it into an sql query ... fixes counts in subwebs |
+|  21 Sep 2015 | initial release |
 
 %META:FORM{name="PackageForm"}%
 %META:FIELD{name="Author" title="Author" value="Michael Daum"}%
@@ -254,7 +257,7 @@ then use
 %META:FIELD{name="Release" title="Release" value="%25$RELEASE%25"}%
 %META:FIELD{name="Description" title="Description" value="%25$SHORTDESCRIPTION%25"}%
 %META:FIELD{name="Repository" title="Repository" value="https://github.com/foswiki/%25$ROOTMODULE%25"}%
-%META:FIELD{name="Copyright" title="Copyright" value="2015-2016 Michael Daum http://michaeldaumconsulting.com"}%
+%META:FIELD{name="Copyright" title="Copyright" value="2015-2019 Michael Daum http://michaeldaumconsulting.com"}%
 %META:FIELD{name="License" title="License" value="GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]])"}%
 %META:FIELD{name="Home" title="Home" value="https://foswiki.org/Extensions/%25$ROOTMODULE%25"}%
 %META:FIELD{name="Support" title="Support" value="https://foswiki.org/Support/%25$ROOTMODULE%25"}%

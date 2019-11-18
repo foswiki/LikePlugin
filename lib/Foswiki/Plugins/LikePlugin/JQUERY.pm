@@ -1,6 +1,6 @@
 # Plugin for Foswiki - The Free and Open Source Wiki, http://foswiki.org/
 #
-# BookPlugin is Copyright (C) 2015-2016 Michael Daum http://michaeldaumconsulting.com
+# BookPlugin is Copyright (C) 2015-2019 Michael Daum http://michaeldaumconsulting.com
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -31,14 +31,14 @@ sub new {
     $class->SUPER::new(
       $session,
       name => 'Like',
-      version => '1.00',
+      version => '1.01',
       author => 'Michael Daum',
       homepage => 'http://foswiki.org/Extensions/LikePlugin',
       puburl => '%PUBURLPATH%/%SYSTEMWEB%/LikePlugin',
       documentation => '%SYSTEMWEB%.LikePlugin',
       javascript => ['like.js'],
       css => ['like.css'],
-      dependencies => ['jsonrpc', 'blockui', 'livequery', 'pnotify'],
+      dependencies => ['jsonrpc', 'blockui', 'pnotify'],
     ),
     $class
   );

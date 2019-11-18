@@ -1,15 +1,14 @@
 /*
- * jQuery like plugin 1.00
+ * jQuery like plugin 1.01
  *
- * Copyright (c) 2015 Michael Daum http://michaeldaumconsulting.com
+ * Copyright (c) 2015-2019 Michael Daum http://michaeldaumconsulting.com
  *
- * Dual licensed under the MIT and GPL licenses:
- *   http://www.opensource.org/licenses/mit-license.php
- *   http://www.gnu.org/licenses/gpl.html
+ * Licensed under the GPL license http://www.gnu.org/licenses/gpl.html
  *
  */
 
-;(function($, window, document) {
+"use strict";
+(function($, window, document) {
 
   // default options
   var defaults = { };
@@ -87,7 +86,7 @@
           self.elem.block({message:''});
         }
       },
-      success: function(json, textStatus, xhr) {
+      success: function(json) {
         self.elem.unblock();
         self.elem.trigger("change.likes", {
           web: self.opts.web,
@@ -98,7 +97,7 @@
           dislikes: json.result.dislikes
         });
       },
-      error: function(json, textStatus, xhr) {
+      error: function(json) {
         self.elem.unblock();
         self.showMessage("error", json.error.message);
         console.error(json.error.message);
@@ -158,7 +157,7 @@
         $.data(this, "_like", new Like(this, opts)); 
       } 
     }); 
-  } 
+  };
 
   // Enable declarative widget instanziation 
   $(".jqLike:not(.jqLikeInited)").livequery(function() {
