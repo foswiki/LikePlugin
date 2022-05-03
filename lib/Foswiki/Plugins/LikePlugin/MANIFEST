@@ -4,6 +4,10 @@ lib/Foswiki/Plugins/LikePlugin/Core.pm 0644
 lib/Foswiki/Plugins/LikePlugin/DEPENDENCIES 0644
 lib/Foswiki/Plugins/LikePlugin/JQUERY.pm 0644
 lib/Foswiki/Plugins/LikePlugin.pm 0644
+lib/Foswiki/Plugins/LikePlugin/Schema/MariaDB.pm 0644
+lib/Foswiki/Plugins/LikePlugin/Schema/MySQL.pm 0644
+lib/Foswiki/Plugins/LikePlugin/Schema.pm 0644
+lib/Foswiki/Plugins/LikePlugin/Schema/SQLite.pm 0644
 locale/LikePlugin/de.po 0644
 locale/LikePlugin/Foswiki.pot 0644
 pub/System/LikePlugin/like.css 0644

@@ -1,6 +1,6 @@
 # Plugin for Foswiki - The Free and Open Source Wiki, http://foswiki.org/
 #
-# LikePlugin is Copyright (C) 2015-2019 Michael Daum http://michaeldaumconsulting.com
+# LikePlugin is Copyright (C) 2015-2022 Michael Daum http://michaeldaumconsulting.com
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -19,6 +19,7 @@ use strict;
 use warnings;
 
 use Foswiki::Plugins::LikePlugin ();
+use Foswiki::DBI ();
 use Foswiki::Func ();
 use Error qw(:try);
 use Encode ();
@@ -28,13 +29,13 @@ use constant TRACE => 0; # toggle me
 
 our %SQL_TEMPLATES = (
   'insert_like' => <<'HERE',
-      replace into %likesTable%
-        (web, topic, meta_type, meta_id, username, like, dislike, timestamp) values 
+      replace into LikePlugin_likes
+        (web, topic, meta_type, meta_id, username, like_count, dislike_count, timestamp) values 
         (?, ?, ?, ?, ?, ?, ?, ?)
 HERE
 
   'select_like_of_user' => <<'HERE',
-      select like, dislike from %likesTable% where 
+      select like_count, dislike_count from LikePlugin_likes where 
         web = ? and 
         topic = ? and 
         meta_type = ? and
@@ -42,14 +43,14 @@ HERE
         username = ?
 HERE
   'select_likes' => <<'HERE',
-      select sum(like), sum(dislike), sum(like)-sum(dislike) from %likesTable% where
+      select sum(like_count), sum(dislike_count), sum(like_count)-sum(dislike_count) from LikePlugin_likes where
         web = ? and 
         topic = ? and 
         meta_type = ? and
         meta_id = ? 
 HERE
   'rename_meta' => <<'HERE',
-      update %likesTable% 
+      update LikePlugin_likes 
         set meta_id = ?, web = ?, topic = ?  where 
         web = ? and
         topic = ? and 
@@ -57,7 +58,7 @@ HERE
         meta_id = ? 
 HERE
   'rename_topic' => <<'HERE',
-      update %likesTable% 
+      update LikePlugin_likes 
         set web = ?, topic = ?  where 
         web = ? and
         topic = ? 
@@ -65,21 +66,10 @@ HERE
 );
 
 ###############################################################################
-sub writeDebug {
-  return unless TRACE;
-  #Foswiki::Func::writeDebug("LikePlugin::Core - $_[0]");
-  print STDERR "LikePlugin::Core - $_[0]\n";
-}
-
-###############################################################################
 sub new {
   my $class = shift;
 
   my $this = bless({
-    dsn => $Foswiki::cfg{LikePlugin}{Database}{DSN} || 'dbi:SQLite:dbname=' . Foswiki::Func::getWorkArea('LikePlugin') . '/likes.db',
-    username => $Foswiki::cfg{LikePlugin}{Database}{UserName},
-    password => $Foswiki::cfg{LikePlugin}{Database}{Password},
-    tablePrefix => $Foswiki::cfg{LikePlugin}{Database}{TablePrefix} || 'foswiki_',
     themes => $Foswiki::cfg{LikePlugin}{Themes} || {
       default => {
         wrapperClass => "jqLikeDefault",
@@ -124,87 +114,45 @@ sub new {
     @_
   }, $class);
 
-  $this->{likesTable} = $this->{tablePrefix}.'likes';
-
-  $this->initDatabase;
-
   return $this;
+}
+
+###############################################################################
+sub db {
+  my $this = shift;
+
+  $this->{_db} = Foswiki::DBI::loadSchema("Foswiki::Plugins::LikePlugin::Schema")
+    unless $this->{_db};
+
+  return $this->{_db};
 }
 
 ###############################################################################
 sub finish {
   my $this = shift;
 
-  if ($this->{sths}) {
-    foreach my $sth (values %{$this->{sths}}) {
+  if ($this->{_sths}) {
+    foreach my $sth (values %{$this->{_sths}}) {
       $sth->finish;
     }
-    $this->{sths} = undef;
   }
 
-  $this->{dbh}->disconnect if defined $this->{dbh};
-  $this->{dbh} = undef;
-}
-
-###############################################################################
-sub initDatabase {
-  my $this = shift;
-
-  unless (defined $this->{dbh}) {
-
-    #writeDebug("connect database");
-    $this->{dbh} = DBI->connect(
-      $this->{dsn},
-      $this->{username},
-      $this->{password},
-      {
-        PrintError => 0,
-        RaiseError => 1,
-        AutoCommit => 1,
-        ShowErrorStatement => 1,
-      }
-    );
-
-    throw Error::Simple("Can't open database $this->{dsn}: " . $DBI::errstr)
-      unless defined $this->{dbh};
-
-    #writeDebug("creating likes table");
-    $this->{dbh}->do(<<HERE);
-      create table if not exists $this->{likesTable} (
-        id integer primary key autoincrement,
-        web varchar(255),
-        topic varchar(255),
-        meta_type char(20), 
-        meta_id char(20),
-        username varchar(255),
-        like integer default 0,
-        dislike integer default 0,
-        timestamp integer
-      )
-HERE
-      $this->{dbh}->do(<<HERE);
-      create unique index if not exists $this->{likesTable}_index on $this->{likesTable} (web, topic, username, meta_type, meta_id)
-HERE
-
-  }
-
-  return $this->{dbh};
+  undef $this->{_sths};
+  undef $this->{_db};
 }
 
 ###############################################################################
 sub getStatementHandler {
   my ($this, $id) = @_;
 
-  my $sth = $this->{sths}{$id};
+  my $sth = $this->{_sths}{$id};
 
   unless (defined $sth) {
     my $statement = $SQL_TEMPLATES{$id};
 
     throw Error::Simple("unknown statement id '$id'") unless $statement;
 
-    $statement =~ s/\%(likesTable)\%/$this->{$1}/g;
-
-    $sth = $this->{sths}{$id} = $this->{dbh}->prepare($statement);
+    $sth = $this->{_sths}{$id} = $this->db->handler->prepare($statement);
   }
 
   return $sth;
@@ -351,16 +299,6 @@ sub LIKE {
 }
 
 ###############################################################################
-sub urlEncode {
-  my $text = shift;
-
-  $text = Encode::encode($Foswiki::cfg{Site}{CharSet}, $text);
-  $text =~ s{([^0-9a-zA-Z-_.:~!*#/])}{sprintf('%%%02x',ord($1))}ge;
-
-  return $text;
-}
-
-###############################################################################
 sub getTheme {
   my ($this, $name) = @_;
 
@@ -438,6 +376,14 @@ sub jsonRpcVote {
     $db->loadTopic($web, $topic);
   }
 
+  # log event
+  $session->logger->log( {
+    level    => 'info',
+    action   => $like?'like':'dislike',
+    webTopic => "$web.$topic",
+    extra    => "total likes=".($likes - $dislikes),
+  });
+
   return {
     likes => $likes,
     dislikes => $dislikes,
@@ -490,7 +436,7 @@ sub getLikes {
   $web =~ s/\//./g;
 
   my $sth = $this->getStatementHandler("select_likes");
-  my ($like, $dislike) = $this->{dbh}->selectrow_array($sth, undef, $web, $topic, $type, $id);
+  my ($like, $dislike) = $this->db->handler->selectrow_array($sth, undef, $web, $topic, $type, $id);
 
   $like ||= 0;
   $dislike ||= 0;
@@ -508,7 +454,7 @@ sub getLikeOfUser {
   $web =~ s/\//./g;
 
   my $sth = $this->getStatementHandler("select_like_of_user");
-  my ($likes, $dislikes) = $this->{dbh}->selectrow_array($sth, undef, $web, $topic, $type, $id, $wikiName);
+  my ($likes, $dislikes) = $this->db->handler->selectrow_array($sth, undef, $web, $topic, $type, $id, $wikiName);
 
   $likes ||= 0;
   $dislikes ||= 0;
@@ -523,7 +469,7 @@ sub solrIndexTopicHandler {
   $web =~ s/\//./g;
 
   my $sth = $this->getStatementHandler("select_likes");
-  my ($likes, $dislikes, $totalLikes) = $this->{dbh}->selectrow_array($sth, undef, $web, $topic, "", "");
+  my ($likes, $dislikes, $totalLikes) = $this->db->handler->selectrow_array($sth, undef, $web, $topic, "", "");
 
   $likes ||= 0;
   $dislikes ||= 0;
@@ -545,7 +491,7 @@ sub dbcacheIndexTopicHandler {
   $web =~ s/\//./g;
 
   my $sth = $this->getStatementHandler("select_likes");
-  my ($likes, $dislikes, $totalLikes) = $this->{dbh}->selectrow_array($sth, undef, $web, $topic, "", "");
+  my ($likes, $dislikes, $totalLikes) = $this->db->handler->selectrow_array($sth, undef, $web, $topic, "", "");
 
   $likes ||= 0;
   $dislikes ||= 0;
@@ -579,4 +525,22 @@ sub afterRenameHandler {
     );
   }
 }
+
+###############################################################################
+sub urlEncode {
+  my $text = shift;
+
+  $text = Encode::encode($Foswiki::cfg{Site}{CharSet}, $text);
+  $text =~ s{([^0-9a-zA-Z-_.:~!*#/])}{sprintf('%%%02x',ord($1))}ge;
+
+  return $text;
+}
+
+###############################################################################
+sub writeDebug {
+  return unless TRACE;
+  #Foswiki::Func::writeDebug("LikePlugin::Core - $_[0]");
+  print STDERR "LikePlugin::Core - $_[0]\n";
+}
+
 1;

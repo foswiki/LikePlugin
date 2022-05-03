@@ -1,7 +1,7 @@
 /*
- * jQuery like plugin 1.01
+ * jQuery like plugin 1.03
  *
- * Copyright (c) 2015-2019 Michael Daum http://michaeldaumconsulting.com
+ * Copyright (c) 2015-2020 Michael Daum http://michaeldaumconsulting.com
  *
  * Licensed under the GPL license http://www.gnu.org/licenses/gpl.html
  *
@@ -131,6 +131,9 @@
 
     self.likes = likes;
     self.dislikes = dislikes;
+
+    self.elem.attr("data-likes", likes);
+    self.elem.attr("data-dislikes", dislikes);
   };
 
   // messaging
@@ -160,8 +163,8 @@
   };
 
   // Enable declarative widget instanziation 
-  $(".jqLike:not(.jqLikeInited)").livequery(function() {
-    $(this).addClass("jqLikeInited").like();
+  $(".jqLike").livequery(function() {
+    $(this).like();
   });
 
 })(jQuery, window, document);

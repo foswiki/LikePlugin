@@ -246,6 +246,7 @@ then use
 ---++ Change History
 
 %TABLE{columnwidths="7em" tablewidth="100%"}%
+|  03 May 2022 | rewrite using Foswiki:Extensions/DBIPlugin |
 |  18 Nov 2019 | added likeiconformat and dislikeiconformat paramerters |
 |  02 Sep 2016 | add support for fontawesome icon; initial support for <nop>WebSocketPlugin |
 |  15 Oct 2015 | normalize web before putting it into an sql query ... fixes counts in subwebs |
@@ -257,7 +258,7 @@ then use
 %META:FIELD{name="Release" title="Release" value="%25$RELEASE%25"}%
 %META:FIELD{name="Description" title="Description" value="%25$SHORTDESCRIPTION%25"}%
 %META:FIELD{name="Repository" title="Repository" value="https://github.com/foswiki/%25$ROOTMODULE%25"}%
-%META:FIELD{name="Copyright" title="Copyright" value="2015-2019 Michael Daum http://michaeldaumconsulting.com"}%
+%META:FIELD{name="Copyright" title="Copyright" value="2015-2022 Michael Daum"}%
 %META:FIELD{name="License" title="License" value="GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]])"}%
 %META:FIELD{name="Home" title="Home" value="https://foswiki.org/Extensions/%25$ROOTMODULE%25"}%
 %META:FIELD{name="Support" title="Support" value="https://foswiki.org/Support/%25$ROOTMODULE%25"}%
