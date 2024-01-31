@@ -16,14 +16,14 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: lib/Foswiki/Plugins/LikePlugin/Core.pm:244
+#: lib/Foswiki/Plugins/LikePlugin/Core.pm:192
 msgid "Click to vote"
 msgstr ""
 
-#: data/System/LikePlugin.txt:130 lib/Foswiki/Plugins/LikePlugin/Core.pm:263
+#: data/System/LikePlugin.txt:134 lib/Foswiki/Plugins/LikePlugin/Core.pm:211
 msgid "I don&#39;t like this"
 msgstr ""
 
-#: data/System/LikePlugin.txt:120 lib/Foswiki/Plugins/LikePlugin/Core.pm:258
+#: data/System/LikePlugin.txt:122 lib/Foswiki/Plugins/LikePlugin/Core.pm:206
 msgid "I like this"
 msgstr ""

@@ -1,6 +1,6 @@
 # Foswiki translation for Deutsch
 # Translators:
-# Foswiki:Main/MichaelDaum, 2015
+# Foswiki:Main/MichaelDaum
 msgid ""
 msgstr ""
 "Project-Id-Version: LikePlugin\n"
@@ -17,14 +17,14 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 2.1\n"
 
-#: lib/Foswiki/Plugins/LikePlugin/Core.pm:244
+#: lib/Foswiki/Plugins/LikePlugin/Core.pm:192
 msgid "Click to vote"
 msgstr "Klicken Sie, um zu bewerten"
 
-#: data/System/LikePlugin.txt:130 lib/Foswiki/Plugins/LikePlugin/Core.pm:263
+#: data/System/LikePlugin.txt:134 lib/Foswiki/Plugins/LikePlugin/Core.pm:211
 msgid "I don&#39;t like this"
 msgstr "Ich mag das nicht"
 
-#: data/System/LikePlugin.txt:120 lib/Foswiki/Plugins/LikePlugin/Core.pm:258
+#: data/System/LikePlugin.txt:122 lib/Foswiki/Plugins/LikePlugin/Core.pm:206
 msgid "I like this"
 msgstr "Ich mag das"

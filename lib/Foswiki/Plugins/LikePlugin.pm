@@ -1,6 +1,6 @@
 # Plugin for Foswiki - The Free and Open Source Wiki, http://foswiki.org/
 #
-# LikePlugin is Copyright (C) 2015-2022 Michael Daum http://michaeldaumconsulting.com
+# LikePlugin is Copyright (C) 2015-2024 Michael Daum http://michaeldaumconsulting.com
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -22,9 +22,10 @@ use Foswiki::Func ();
 use Foswiki::Plugins::JQueryPlugin ();
 use Foswiki::Contrib::JsonRpcContrib ();
 
-our $VERSION = '3.00';
-our $RELEASE = '03 May 2022';
+our $VERSION = '3.01';
+our $RELEASE = '%$RELEASE%';
 our $SHORTDESCRIPTION = 'Like-style voting for content';
+our $LICENSECODE = '%$LICENSECODE%';
 our $NO_PREFS_IN_TOPIC = 1;
 our $core;
 our @knownAfterLikeHandler = ();
@@ -37,14 +38,14 @@ sub initPlugin {
     return getCore()->jsonRpcVote(@_);
   });
 
-  if ($Foswiki::cfg{Plugins}{SolrPlugin} && $Foswiki::cfg{Plugins}{SolrPlugin}{Enabled}) {
+  if (exists $Foswiki::cfg{Plugins}{SolrPlugin} && $Foswiki::cfg{Plugins}{SolrPlugin}{Enabled}) {
     require Foswiki::Plugins::SolrPlugin;
     Foswiki::Plugins::SolrPlugin::registerIndexTopicHandler(sub {
       return getCore()->solrIndexTopicHandler(@_);
     });
   }
 
-  if ($Foswiki::cfg{Plugins}{DBCachePlugin}{Enabled}) {
+  if (exists $Foswiki::cfg{Plugins}{DBCachePlugin} && $Foswiki::cfg{Plugins}{DBCachePlugin}{Enabled}) {
     require Foswiki::Plugins::DBCachePlugin;
     Foswiki::Plugins::DBCachePlugin::registerIndexTopicHandler(sub {
       return getCore()->dbcacheIndexTopicHandler(@_);
@@ -75,6 +76,5 @@ sub finishPlugin {
 
   @knownAfterLikeHandler = ();
 }
-
 
 1;

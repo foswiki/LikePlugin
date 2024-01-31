@@ -1,6 +1,6 @@
 # Plugin for Foswiki - The Free and Open Source Wiki, http://foswiki.org/
 #
-# LikePlugin is Copyright (C) 2015-2022 Michael Daum http://michaeldaumconsulting.com
+# LikePlugin is Copyright (C) 2015-2024 Michael Daum http://michaeldaumconsulting.com
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -152,7 +152,7 @@ sub getStatementHandler {
 
     throw Error::Simple("unknown statement id '$id'") unless $statement;
 
-    $sth = $this->{_sths}{$id} = $this->db->handler->prepare($statement);
+    $sth = $this->{_sths}{$id} = $this->db->handler->prepare_cached($statement);
   }
 
   return $sth;
@@ -302,7 +302,7 @@ sub LIKE {
 sub getTheme {
   my ($this, $name) = @_;
 
-  $name ||= 'default',
+  $name ||= 'default';
   return $this->{themes}{$name} || $this->{themes}{default};
 }
 
