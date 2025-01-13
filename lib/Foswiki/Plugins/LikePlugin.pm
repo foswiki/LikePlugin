@@ -22,7 +22,7 @@ use Foswiki::Func ();
 use Foswiki::Plugins::JQueryPlugin ();
 use Foswiki::Contrib::JsonRpcContrib ();
 
-our $VERSION = '3.01';
+our $VERSION = '3.10';
 our $RELEASE = '%$RELEASE%';
 our $SHORTDESCRIPTION = 'Like-style voting for content';
 our $LICENSECODE = '%$LICENSECODE%';
