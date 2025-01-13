@@ -1,4 +1,4 @@
-%META:TOPICINFO{author="ProjectContributor" comment="" date="1574084515" format="1.1"  version="1"}%
+%META:TOPICINFO{author="ProjectContributor" comment="" date="1736788729" format="1.1"  version="1"}%
 ---+!! %TOPIC%
 %FORMFIELD{"Description"}%
 
@@ -11,10 +11,10 @@ world for obvious reasons.
 
 Likes are used for social filtering, to
 
-   * list the most liked contributions on a frontpage (requires [[Foswiki:Extensions/DBCachePlugin][DBCachePlugin]]),
-   * influence the sorting order of search results (requires [[Foswiki:Extensions/SolrPlugin][SolrPlugin]]),
-   * vote on comments and optionally hide comments that fall below a lower threshold (requires [[Foswiki:Extensions/MetaCommentPlugin][MetaCommentPlugin]])
-   * vote on attachments (requires [[Foswiki:Extensions/TopicInteractionPlugin][TopicInteractionPlugin]]).
+   * list the most liked contributions on a frontpage (requires [[https://foswiki.org/Extensions/DBCachePlugin][DBCachePlugin]]),
+   * influence the sorting order of search results (requires [[https://foswiki.org/Extensions/SolrPlugin][SolrPlugin]]),
+   * vote on comments and optionally hide comments that fall below a lower threshold (requires [[https://foswiki.org/Extensions/MetaCommentPlugin][MetaCommentPlugin]])
+   * vote on attachments (requires [[https://foswiki.org/Extensions/TopicInteractionPlugin][TopicInteractionPlugin]]).
 
 Like buttons are highly customizable coming with a set of look and feels to match common css frameworks such as jquery-ui or flat design.
 
@@ -23,7 +23,7 @@ In general, there are two different kinds of Likes
    * youtube style: you may vote thumb up _and_ down
    * facebook style: only positive likes are collected.
 
-Note that this plugin does _not_ implement a star rating. Use the social rating feature of [[Foswiki:Extensions/SocialFormfieldsPlugin][SocialFormfieldsPlugin]].
+Note that this plugin does _not_ implement a star rating. Use the social rating feature of [[https://foswiki.org/Extensions/SocialFormfieldsPlugin][SocialFormfieldsPlugin]].
 
 ---++ Examples
 %IF{"not context LikePluginEnabled"
@@ -183,7 +183,7 @@ Foswiki::LikePlugin::registerAfterLikeHandler(sub {
 });
 </verbatim>
 
-For example [[Foswiki:Extensions/MetaCommentPlugin][MetaCommentPlugin]] updates the META:COMMENT data to cache like and dislike counts
+For example [[https://foswiki.org/Extensions/MetaCommentPlugin][MetaCommentPlugin]] updates the META:COMMENT data to cache like and dislike counts
 as part of the meta data to be able to seamlessly sort and hide comments based on likes.
 
 ---+++ getCore()
@@ -226,7 +226,7 @@ Note that you will need a database driver for the DBI interface used to store va
 ---++ Skin integration
 
 ---+++ !NatSkin
-LikePlugin is well integrated into [[Foswiki:Extensions/NatSkin][NatSkin]] so that no further customizations are required. Topics are
+LikePlugin is well integrated into [[https://foswiki.org/Extensions/NatSkin][NatSkin]] so that no further customizations are required. Topics are
 like-enabled by displaying a "thumb-up" as part of the topic actions. You may further customize the location of the like button in the !SiteTopicActions
 web component.
 
@@ -235,7 +235,7 @@ To enable topic-voting add the =like= identifier to the =SKIN= setting, e.g.
 
 <verbatim>   * Set SKIN = like, natedit, pattern</verbatim>
 
-In case you've got [[Foswiki:Extensions/BreadcrumbsPlugin][BreadcrumbsPlugin]], [[Foswiki:Extensions/TopicInteractionPlugin][TopicInteractionPlugin]] and/or [[Foswiki:Extensions/SolrPlugin][SolrPlugin]]
+In case you've got [[https://foswiki.org/Extensions/BreadcrumbsPlugin][BreadcrumbsPlugin]], [[https://foswiki.org/Extensions/TopicInteractionPlugin][TopicInteractionPlugin]] and/or [[https://foswiki.org/Extensions/SolrPlugin][SolrPlugin]]
 then use
 
 <verbatim>   * Set SKIN = like, breadcrumbs, solr, topicinteraction, natedit, pattern</verbatim>
@@ -246,6 +246,7 @@ then use
 ---++ Change History
 
 %TABLE{columnwidths="7em" tablewidth="100%"}%
+|  13 Jan 2025 | added support for !WebSocketPlugin |
 |  31 Jan 2024 | mysql and mariadb require utf8mb4_bin collation and characterset |
 |  03 May 2022 | rewrite using Foswiki:Extensions/DBIPlugin |
 |  18 Nov 2019 | added likeiconformat and dislikeiconformat paramerters |
@@ -259,22 +260,22 @@ then use
 %META:FIELD{name="Release" title="Release" value="%25$RELEASE%25"}%
 %META:FIELD{name="Description" title="Description" value="%25$SHORTDESCRIPTION%25"}%
 %META:FIELD{name="Repository" title="Repository" value="https://github.com/foswiki/%25$ROOTMODULE%25"}%
-%META:FIELD{name="Copyright" title="Copyright" value="2015-2023 Michael Daum"}%
+%META:FIELD{name="Copyright" title="Copyright" value="2015-2025 Michael Daum"}%
 %META:FIELD{name="License" title="License" value="GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]])"}%
 %META:FIELD{name="Home" title="Home" value="https://foswiki.org/Extensions/%25$ROOTMODULE%25"}%
 %META:FIELD{name="Support" title="Support" value="https://foswiki.org/Support/%25$ROOTMODULE%25"}%
-%META:FILEATTACHMENT{name="LikeSnap15.png" attr="" comment="" date="1574084515" size="906" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap14.png" attr="" comment="" date="1574084515" size="1563" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap13.png" attr="" comment="" date="1574084515" size="2416" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap12.png" attr="" comment="" date="1574084515" size="1461" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap11.png" attr="" comment="" date="1574084515" size="2495" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap10.png" attr="" comment="" date="1574084515" size="900" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap9.png" attr="" comment="" date="1574084515" size="3215" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap8.png" attr="" comment="" date="1574084515" size="4190" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap7.png" attr="" comment="" date="1574084515" size="4078" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap6.png" attr="" comment="" date="1574084515" size="3024" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap5.png" attr="" comment="" date="1574084515" size="2750" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap4.png" attr="" comment="" date="1574084515" size="2792" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap3.png" attr="" comment="" date="1574084515" size="2887" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap2.png" attr="" comment="" date="1574084515" size="2911" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap1.png" attr="" comment="" date="1574084515" size="2704" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap15.png" attr="" comment="" date="1736788729" size="906" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap14.png" attr="" comment="" date="1736788729" size="1563" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap13.png" attr="" comment="" date="1736788729" size="2416" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap12.png" attr="" comment="" date="1736788729" size="1461" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap11.png" attr="" comment="" date="1736788729" size="2495" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap10.png" attr="" comment="" date="1736788729" size="900" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap9.png" attr="" comment="" date="1736788729" size="3215" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap8.png" attr="" comment="" date="1736788729" size="4190" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap7.png" attr="" comment="" date="1736788729" size="4078" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap6.png" attr="" comment="" date="1736788729" size="3024" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap5.png" attr="" comment="" date="1736788729" size="2750" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap4.png" attr="" comment="" date="1736788729" size="2792" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap3.png" attr="" comment="" date="1736788729" size="2887" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap2.png" attr="" comment="" date="1736788729" size="2911" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap1.png" attr="" comment="" date="1736788729" size="2704" user="ProjectContributor" version="1"}%

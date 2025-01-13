@@ -1,6 +1,6 @@
 # Plugin for Foswiki - The Free and Open Source Wiki, http://foswiki.org/
 #
-# LikePlugin is Copyright (C) 2015-2024 Michael Daum http://michaeldaumconsulting.com
+# LikePlugin is Copyright (C) 2015-2025 Michael Daum http://michaeldaumconsulting.com
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -343,22 +343,21 @@ sub jsonRpcVote {
     dislike => $dislike,
   });
 
-  # trigger event
   if ($Foswiki::cfg{Plugins}{WebSocketPlugin}{Enabled}) {
+    # trigger event
+    my $clientId= $request->param("clientId") || 'server';
     require Foswiki::Plugins::WebSocketPlugin;
-    my $pubSub = Foswiki::Plugins::WebSocketPlugin::getPubSub();
-
-    $pubSub->publish("_global", {
-      type => "save",
+    Foswiki::Plugins::WebSocketPlugin::publish("$web.$topic", {
+      type => "like",
+      clientId => $clientId,
       data => {
-        user => Foswiki::Func::getWikiName(),
-        web => $web,
-        topic => $topic,
+        like => int($like),
+        dislike => int($dislike),
+        metaType => $metaType,
+        metaId => $metaId,
       }
     });
-
   } else {
-  
     # trigger solr indexer ourselves
     if ($Foswiki::cfg{Plugins}{SolrPlugin} && $Foswiki::cfg{Plugins}{SolrPlugin}{Enabled}) {
       require Foswiki::Plugins::SolrPlugin;

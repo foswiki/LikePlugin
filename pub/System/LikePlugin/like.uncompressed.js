@@ -1,7 +1,7 @@
 /*
- * jQuery like plugin 1.03
+ * jQuery like plugin 1.04
  *
- * Copyright (c) 2015-2020 Michael Daum http://michaeldaumconsulting.com
+ * Copyright (c) 2015-2025 Michael Daum http://michaeldaumconsulting.com
  *
  * Licensed under the GPL license http://www.gnu.org/licenses/gpl.html
  *
@@ -67,20 +67,29 @@
 
   // record vote 
   Like.prototype.vote = function(flag) {
-    var self = this;
-    flag = parseInt(flag, 10);
+    var self = this, params;
+
     self.hideMessages();
 
-    $.jsonRpc(foswiki.getScriptUrl("jsonrpc"), {
+    flag = parseInt(flag, 10),
+
+    params = {
+      topic: self.opts.web+'.'+self.opts.topic,
+      type: self.opts.metaType,
+      id: self.opts.metaId,
+      like: flag>0?1:0,
+      dislike: flag<0?1:0
+    };
+
+
+    if (foswiki.eventClient) {
+      params.clientId = foswiki.eventClient.id;
+    }
+
+    return $.jsonRpc(foswiki.getScriptUrl("jsonrpc"), {
       namespace: "LikePlugin",
       method: "vote",
-      params: {
-        topic: self.opts.web+'.'+self.opts.topic,
-        type: self.opts.metaType,
-        id: self.opts.metaId,
-        like: flag>0?1:0,
-        dislike: flag<0?1:0
-      },
+      params: params,
       beforeSend: function() {
         if (!self.elem.data("blockUI.isBlocked")) {
           self.elem.block({message:''});

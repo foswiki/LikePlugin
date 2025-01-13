@@ -2,6 +2,7 @@
 data/System/LikePlugin.txt 0644
 lib/Foswiki/Plugins/LikePlugin/Core.pm 0644
 lib/Foswiki/Plugins/LikePlugin/DEPENDENCIES 0644
+lib/Foswiki/Plugins/LikePlugin/MANIFEST 0644
 lib/Foswiki/Plugins/LikePlugin/JQUERY.pm 0644
 lib/Foswiki/Plugins/LikePlugin.pm 0644
 lib/Foswiki/Plugins/LikePlugin/Schema/MariaDB.pm 0644
