@@ -1,4 +1,4 @@
-%META:TOPICINFO{author="ProjectContributor" comment="" date="1736788729" format="1.1"  version="1"}%
+%META:TOPICINFO{author="ProjectContributor" comment="" date="1739281954" format="1.1"  version="1"}%
 ---+!! %TOPIC%
 %FORMFIELD{"Description"}%
 
@@ -246,6 +246,7 @@ then use
 ---++ Change History
 
 %TABLE{columnwidths="7em" tablewidth="100%"}%
+|  06 Feb 2025 | improved pod docu of perl code |
 |  13 Jan 2025 | added support for !WebSocketPlugin |
 |  31 Jan 2024 | mysql and mariadb require utf8mb4_bin collation and characterset |
 |  03 May 2022 | rewrite using Foswiki:Extensions/DBIPlugin |
@@ -264,18 +265,18 @@ then use
 %META:FIELD{name="License" title="License" value="GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]])"}%
 %META:FIELD{name="Home" title="Home" value="https://foswiki.org/Extensions/%25$ROOTMODULE%25"}%
 %META:FIELD{name="Support" title="Support" value="https://foswiki.org/Support/%25$ROOTMODULE%25"}%
-%META:FILEATTACHMENT{name="LikeSnap15.png" attr="" comment="" date="1736788729" size="906" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap14.png" attr="" comment="" date="1736788729" size="1563" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap13.png" attr="" comment="" date="1736788729" size="2416" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap12.png" attr="" comment="" date="1736788729" size="1461" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap11.png" attr="" comment="" date="1736788729" size="2495" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap10.png" attr="" comment="" date="1736788729" size="900" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap9.png" attr="" comment="" date="1736788729" size="3215" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap8.png" attr="" comment="" date="1736788729" size="4190" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap7.png" attr="" comment="" date="1736788729" size="4078" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap6.png" attr="" comment="" date="1736788729" size="3024" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap5.png" attr="" comment="" date="1736788729" size="2750" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap4.png" attr="" comment="" date="1736788729" size="2792" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap3.png" attr="" comment="" date="1736788729" size="2887" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap2.png" attr="" comment="" date="1736788729" size="2911" user="ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="LikeSnap1.png" attr="" comment="" date="1736788729" size="2704" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap15.png" attr="" comment="" date="1739281954" size="906" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap14.png" attr="" comment="" date="1739281954" size="1563" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap13.png" attr="" comment="" date="1739281954" size="2416" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap12.png" attr="" comment="" date="1739281954" size="1461" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap11.png" attr="" comment="" date="1739281954" size="2495" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap10.png" attr="" comment="" date="1739281954" size="900" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap9.png" attr="" comment="" date="1739281954" size="3215" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap8.png" attr="" comment="" date="1739281954" size="4190" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap7.png" attr="" comment="" date="1739281954" size="4078" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap6.png" attr="" comment="" date="1739281954" size="3024" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap5.png" attr="" comment="" date="1739281954" size="2750" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap4.png" attr="" comment="" date="1739281954" size="2792" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap3.png" attr="" comment="" date="1739281954" size="2887" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap2.png" attr="" comment="" date="1739281954" size="2911" user="ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LikeSnap1.png" attr="" comment="" date="1739281954" size="2704" user="ProjectContributor" version="1"}%

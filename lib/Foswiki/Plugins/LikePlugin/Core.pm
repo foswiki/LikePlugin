@@ -15,6 +15,14 @@
 
 package Foswiki::Plugins::LikePlugin::Core;
 
+=begin TML
+
+---+ package Foswiki::Plugins::LikePlugin::Core
+
+Core of the plugin. There can only be one.
+
+=cut
+
 use strict;
 use warnings;
 
@@ -65,7 +73,14 @@ HERE
 HERE
 );
 
-###############################################################################
+=begin TML
+
+---++ ClassMethod new() -> $core
+
+constructor for a Core object
+
+=cut
+
 sub new {
   my $class = shift;
 
@@ -117,17 +132,14 @@ sub new {
   return $this;
 }
 
-###############################################################################
-sub db {
-  my $this = shift;
+=begin TML
 
-  $this->{_db} = Foswiki::DBI::loadSchema("Foswiki::Plugins::LikePlugin::Schema")
-    unless $this->{_db};
+---++ ObjectMethod finish() 
 
-  return $this->{_db};
-}
+deconstruct this object
 
-###############################################################################
+=cut
+
 sub finish {
   my $this = shift;
 
@@ -141,7 +153,31 @@ sub finish {
   undef $this->{_db};
 }
 
-###############################################################################
+=begin TML
+
+---++ ObjectMethod db() - $db
+
+create db based on dbi schema
+
+=cut
+
+sub db {
+  my $this = shift;
+
+  $this->{_db} = Foswiki::DBI::loadSchema("Foswiki::Plugins::LikePlugin::Schema")
+    unless $this->{_db};
+
+  return $this->{_db};
+}
+
+=begin TML
+
+---++ ObjectMethod getStatementHandler($id) -> $sth
+
+get sql statement handler for the stored templates 
+
+=cut
+
 sub getStatementHandler {
   my ($this, $id) = @_;
 
@@ -158,11 +194,18 @@ sub getStatementHandler {
   return $sth;
 }
 
-###############################################################################
+=begin TML
+
+---++ ObjectMethod LIKE($session, $params, $topic, $web) -> $string
+
+implements the =%LIKE= macro
+
+=cut
+
 sub LIKE {
   my ($this, $session, $params, $topic, $web) = @_;
 
-  #writeDebug("called LIKE()");
+  #_writeDebug("called LIKE()");
 
   my ($theWeb, $theTopic) = Foswiki::Func::normalizeWebTopicName($params->{web} || $web, $params->{_DEFAULT} || $params->{topic} || $topic);
   my $metaType = $params->{type};
@@ -243,10 +286,10 @@ sub LIKE {
   push @html5Params, "data-topic='$theTopic'";
   push @html5Params, "data-meta-type='$metaType'" if $metaType;
   push @html5Params, "data-meta-id='$metaId'" if $metaId;
-  push @html5Params, "data-like-label='".urlEncode($likeLabel)."'" if $likeLabel;
-  push @html5Params, "data-liked-label='".urlEncode($likedLabel)."'" if $likedLabel;
-  push @html5Params, "data-dislike-label='".urlEncode($dislikeLabel)."'" if $dislikeLabel;
-  push @html5Params, "data-disliked-label='".urlEncode($dislikedLabel)."'" if $dislikedLabel;
+  push @html5Params, "data-like-label='"._urlEncode($likeLabel)."'" if $likeLabel;
+  push @html5Params, "data-liked-label='"._urlEncode($likedLabel)."'" if $likedLabel;
+  push @html5Params, "data-dislike-label='"._urlEncode($dislikeLabel)."'" if $dislikeLabel;
+  push @html5Params, "data-disliked-label='"._urlEncode($dislikedLabel)."'" if $dislikedLabel;
   push @html5Params, "data-likes='$likeCount'";
   push @html5Params, "data-dislikes='$dislikeCount'";
   push @html5Params, "data-selected-class='%selectionClass%'";
@@ -298,7 +341,14 @@ sub LIKE {
   return Foswiki::Func::decodeFormatTokens($header.$result.$footer);
 }
 
-###############################################################################
+=begin TML
+
+---++ ObjectMethod getTheme($name) -> $record
+
+returns the theme description for the given name 
+
+=cut
+
 sub getTheme {
   my ($this, $name) = @_;
 
@@ -306,7 +356,14 @@ sub getTheme {
   return $this->{themes}{$name} || $this->{themes}{default};
 }
 
-###############################################################################
+=begin TML
+
+---++ ObjectMethod jsonRpcVote($session, $request) -> $responseJson
+
+JSON-RPC handler for the vote method
+
+=cut
+
 sub jsonRpcVote {
   my ($this, $session, $request) = @_;
 
@@ -331,7 +388,7 @@ sub jsonRpcVote {
   my $like = $request->param("like") || 0;
   my $dislike= $request->param("dislike") || 0;
 
-  writeDebug("called jsonRpcVote(), topic=$web.$topic, userName=$userName, like=$like, dislike=$dislike");
+  _writeDebug("called jsonRpcVote(), topic=$web.$topic, userName=$userName, like=$like, dislike=$dislike");
 
   my ($likes, $dislikes) = $this->like({
     web => $web,
@@ -389,7 +446,14 @@ sub jsonRpcVote {
   };
 }
 
-###############################################################################
+=begin TML
+
+---++ ObjectMethod like($record) -> ($likes, $dislikes)
+
+adds a like record to the db and returns an array of likes, dislikes counter
+
+=cut
+
 sub like {
   my ($this, $record) = @_;
 
@@ -426,7 +490,14 @@ sub like {
   return ($likes, $dislikes);
 }
 
-###############################################################################
+=begin TML
+
+---++ ObjectMethod getLikes($web, $topic, $type, $id) -> ($likes, $dislikes)
+
+returns an array of two counters likes and dislikes
+
+=cut
+
 sub getLikes {
   my ($this, $web, $topic, $type, $id) = @_;
 
@@ -443,7 +514,14 @@ sub getLikes {
   return ($like, $dislike);
 }
 
-###############################################################################
+=begin TML
+
+---++ ObjectMethod getLikeOfUser($web, $topic, $type, $id, $wikiName) -> ($likes, $dislikes)
+
+return the likes of a given user
+
+=cut
+
 sub getLikeOfUser {
   my ($this, $web, $topic, $type, $id, $wikiName) = @_;
 
@@ -461,7 +539,14 @@ sub getLikeOfUser {
   return ($likes, $dislikes);
 }
 
-##############################################################################
+=begin TML
+
+---++ ObjectMethod solrIndexTopicHandler($indexer, $doc, $web, $topic, $meta, $text) 
+
+solr handler adding likes to the index
+
+=cut
+
 sub solrIndexTopicHandler {
   my ($this, $indexer, $doc, $web, $topic, $meta, $text) = @_;
 
@@ -483,7 +568,14 @@ sub solrIndexTopicHandler {
   );
 }
 
-##############################################################################
+=begin TML
+
+---++ ObjectMethod dbcacheIndexTopicHandler($db, $obj, $web, $topic, $meta, $text) 
+
+dbcache handler adding likes to the dbcache
+
+=cut
+
 sub dbcacheIndexTopicHandler {
   my ($this, $db, $obj, $web, $topic, $meta, $text) = @_;
 
@@ -503,14 +595,22 @@ sub dbcacheIndexTopicHandler {
   $obj->set("total_likes", $totalLikes);
 }
 
-##############################################################################
+=begin TML
+
+---++ ObjectMethod afterRenameHandler($oldWeb, $oldTopic, $oldAttachment, $newWeb, $newTopic, $newAttachment) 
+
+this handler is called whenever an object on Foswiki is renamed. the callback will then maintain the database
+records associated with this object and rename the records accordingly
+
+=cut
+
 sub afterRenameHandler {
   my ($this, $oldWeb, $oldTopic, $oldAttachment, $newWeb, $newTopic, $newAttachment) = @_;
 
-  writeDebug("called afterRenameHandler($oldWeb, $oldTopic, $oldAttachment, $newWeb, $newTopic, $newAttachment)");
+  _writeDebug("called afterRenameHandler($oldWeb, $oldTopic, $oldAttachment, $newWeb, $newTopic, $newAttachment)");
 
   if ($oldAttachment && $newAttachment) {
-    writeDebug("rename attachment");
+    _writeDebug("rename attachment");
     my $sth = $this->getStatementHandler("rename_meta");
     $sth->execute(
       $newAttachment, $newWeb, $newTopic,
@@ -525,8 +625,9 @@ sub afterRenameHandler {
   }
 }
 
-###############################################################################
-sub urlEncode {
+# static helper
+
+sub _urlEncode {
   my $text = shift;
 
   $text = Encode::encode($Foswiki::cfg{Site}{CharSet}, $text);
@@ -535,10 +636,8 @@ sub urlEncode {
   return $text;
 }
 
-###############################################################################
-sub writeDebug {
+sub _writeDebug {
   return unless TRACE;
-  #Foswiki::Func::writeDebug("LikePlugin::Core - $_[0]");
   print STDERR "LikePlugin::Core - $_[0]\n";
 }
 

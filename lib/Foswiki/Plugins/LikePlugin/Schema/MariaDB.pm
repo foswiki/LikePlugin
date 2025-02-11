@@ -15,6 +15,14 @@
 
 package Foswiki::Plugins::LikePlugin::Schema::MariaDB;
 
+=begin TML
+
+---+ package Foswiki::Plugins::LikePlugin::Schema;;MariaDB
+
+db specific schema definition
+
+=cut
+
 use strict;
 use warnings;
 

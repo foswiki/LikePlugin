@@ -15,6 +15,14 @@
 
 package Foswiki::Plugins::LikePlugin::JQUERY;
 
+=begin TML
+
+---+ package Foswiki::Plugins::LikePlugin::JQUERY
+
+jQuery perl stub to load the user interface
+
+=cut
+
 use strict;
 use warnings;
 

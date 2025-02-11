@@ -15,6 +15,14 @@
 
 package Foswiki::Plugins::LikePlugin;
 
+=begin TML
+
+---+ package Foswiki::Plugins::LikePlugin
+
+base class to hook into the foswiki core
+
+=cut
+
 use strict;
 use warnings;
 
@@ -22,13 +30,21 @@ use Foswiki::Func ();
 use Foswiki::Plugins::JQueryPlugin ();
 use Foswiki::Contrib::JsonRpcContrib ();
 
-our $VERSION = '3.10';
+our $VERSION = '3.11';
 our $RELEASE = '%$RELEASE%';
 our $SHORTDESCRIPTION = 'Like-style voting for content';
 our $LICENSECODE = '%$LICENSECODE%';
 our $NO_PREFS_IN_TOPIC = 1;
 our $core;
 our @knownAfterLikeHandler = ();
+
+=begin TML
+
+---++ initPlugin($topic, $web, $user) -> $boolean
+
+initialize the plugin, automatically called during the core initialization process
+
+=cut
 
 sub initPlugin {
 
@@ -55,9 +71,29 @@ sub initPlugin {
   return 1;
 }
 
-sub afterRenameHandler {
-  return getCore()->afterRenameHandler(@_);
+=begin TML
+
+---++ ClassMethod finish()
+
+called when this object is destroyed
+
+=cut
+
+sub finishPlugin {
+  undef $core;
+
+  @knownAfterLikeHandler = ();
 }
+
+=begin TML
+
+---++ getCore() -> $core
+
+returns a singleton Foswiki::Plugins::LikePlugin::Core object for this plugin;
+a new core is allocated during each session request; once a core has been
+created it is destroyed during =finishPlugin()=
+
+=cut
 
 sub getCore {
   unless (defined $core) {
@@ -67,14 +103,29 @@ sub getCore {
   return $core;
 }
 
-sub registerAfterLikeHandler {
-  push @knownAfterLikeHandler, shift;
+
+=begin TML
+
+---++ ClassMethod afterRenameHandler() 
+
+called by the core whenever a topic or attachment is renamed 
+
+=cut
+
+sub afterRenameHandler {
+  return getCore()->afterRenameHandler(@_);
 }
 
-sub finishPlugin {
-  undef $core;
+=begin TML
 
-  @knownAfterLikeHandler = ();
+---++ ClassMethod registerAfterLikeHandler($sub) 
+
+register a callback handler to be called whenever a like is performed
+
+=cut
+
+sub registerAfterLikeHandler {
+  push @knownAfterLikeHandler, shift;
 }
 
 1;

@@ -15,6 +15,14 @@
 
 package Foswiki::Plugins::LikePlugin::Schema;
 
+=begin TML
+
+---+ package Foswiki::Plugins::LikePlugin::Schema
+
+basic schema definition
+
+=cut
+
 use strict;
 use warnings;
 

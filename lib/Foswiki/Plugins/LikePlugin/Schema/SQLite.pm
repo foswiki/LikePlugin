@@ -15,6 +15,14 @@
 
 package Foswiki::Plugins::LikePlugin::Schema::SQLite;
 
+=begin TML
+
+---+ package Foswiki::Plugins::LikePlugin::Schema;;SQLite
+
+db specific schema definition
+
+=cut
+
 use strict;
 use warnings;
 

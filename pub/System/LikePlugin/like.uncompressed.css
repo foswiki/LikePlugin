@@ -116,7 +116,7 @@
 /* simple */
 .jqLikeSimple .jqIcon {
   margin:0;
-
+  vertical-align:middle;
   -webkit-filter: grayscale(100%); /* Chrome 19+, Safari 6+, Safari 6+ iOS */
 }
 .jqLikeSimple .jqDislikeButton {

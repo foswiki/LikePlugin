@@ -15,6 +15,14 @@
 
 package Foswiki::Plugins::LikePlugin::Schema::MySQL;
 
+=begin TML
+
+---+ package Foswiki::Plugins::LikePlugin::Schema;;MySQL
+
+db specific schema definition
+
+=cut
+
 use strict;
 use warnings;
 
