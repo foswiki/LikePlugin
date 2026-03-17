@@ -1,7 +1,7 @@
 /*
  * jQuery like plugin 1.04
  *
- * Copyright (c) 2015-2025 Michael Daum http://michaeldaumconsulting.com
+ * Copyright (c) 2015-2026 Michael Daum http://michaeldaumconsulting.com
  *
  * Licensed under the GPL license http://www.gnu.org/licenses/gpl.html
  *

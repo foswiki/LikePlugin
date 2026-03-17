@@ -13,11 +13,11 @@
 # GNU General Public License for more details, published at
 # http://www.gnu.org/copyleft/gpl.html
 
-package Foswiki::Plugins::LikePlugin::Schema::MySQL;
+package Foswiki::Plugins::LikePlugin::Schema::PostgreSQL;
 
 =begin TML
 
----+ package Foswiki::Plugins::LikePlugin::Schema;;MySQL
+---+ package Foswiki::Plugins::LikePlugin::Schema::PostgreSQL
 
 db specific schema definition
 
@@ -31,8 +31,8 @@ our @ISA = ('Foswiki::Plugins::LikePlugin::Schema');
 
 sub getDefinition {
   return [[
-      'CREATE TABLE IF NOT EXISTS %prefix%likes (
-        id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
+     'CREATE TABLE IF NOT EXISTS %prefix%likes (
+        id SERIAL PRIMARY KEY,
         web VARCHAR(255),
         topic VARCHAR(255),
         meta_type CHAR(20), 
@@ -41,10 +41,11 @@ sub getDefinition {
         like_count INTEGER DEFAULT 0,
         dislike_count INTEGER DEFAULT 0,
         timestamp INTEGER
-      ) DEFAULT CHARSET=utf8mb4 DEFAULT COLLATE utf8mb4_bin',
-
-      'CREATE UNIQUE INDEX %prefix%idx_likes on %prefix%likes (web, topic, username, meta_type, meta_id)'
+    )',
+    'CREATE UNIQUE INDEX IF NOT EXISTS %prefix%idx_likes on %prefix%likes (web, topic, username, meta_type, meta_id)'
   ]];
 }
 
 1;
+
+
